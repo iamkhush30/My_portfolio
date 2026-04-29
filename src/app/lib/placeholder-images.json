@@ -1,0 +1,53 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-image",
+      "description": "Sophisticated abstract digital art representing technology and design. Recommended size: 1920x1080.",
+      "imageUrl": "https://picsum.photos/seed/alchemist/1200/800",
+      "imageHint": "abstract technology digital art"
+    },
+    {
+      "id": "profile-placeholder",
+      "description": "Professional portrait placeholder. Recommended size: 800x800.",
+      "imageUrl": "https://picsum.photos/seed/portrait/600/600",
+      "imageHint": "professional portrait"
+    },
+    {
+      "id": "project-1",
+      "description": "Cloud infrastructure and automation dashboard. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "https://picsum.photos/seed/project1/1000/700",
+      "imageHint": "tech dashboard interface"
+    },
+    {
+      "id": "project-2",
+      "description": "High-end design system and user interface. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "https://picsum.photos/seed/project2/1000/700",
+      "imageHint": "minimalist design system"
+    },
+    {
+      "id": "project-3",
+      "description": "CI/CD pipeline visualization tool. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "https://picsum.photos/seed/project3/1000/700",
+      "imageHint": "network pipeline visual"
+    },
+    {
+      "id": "project-4",
+      "description": "Global cloud orchestration architecture. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "https://picsum.photos/seed/project4/1000/700",
+      "imageHint": "cloud computing server"
+    },
+    {
+      "id": "project-5",
+      "description": "Next-gen glassmorphism interface design. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "https://picsum.photos/seed/project5/1000/700",
+      "imageHint": "abstract glass interface"
+    },
+    {
+      "id": "project-6",
+      "description": "Cybersecurity automated threat detection. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "https://picsum.photos/seed/project6/1000/700",
+      "imageHint": "cybersecurity network lock"
+    }
+  ]
+}
