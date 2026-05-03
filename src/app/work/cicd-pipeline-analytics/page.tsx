@@ -3,11 +3,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Header } from '@/components/portfolio/header';
-import { Footer } from '@/components/portfolio/footer';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { useScrollAnimation } from '@/hooks/use-scroll-animation';
+import { Header } from '@/features/portfolio/components/header';
+import { Footer } from '@/features/portfolio/components/footer';
+import { Badge } from '@/shared/ui/badge';
+import { cn } from '@/shared/lib/utils';
+import { useScrollAnimation } from '@/shared/hooks/use-scroll-animation';
 import { 
   Gitlab, 
   Terminal, 
@@ -17,7 +17,15 @@ import {
   Activity, 
   ArrowRight, 
   Zap,
-  ShieldCheck
+  ShieldCheck,
+  AlertTriangle,
+  Award,
+  User,
+  GitBranch,
+  Layers,
+  Wrench,
+  Smartphone,
+  Search
 } from 'lucide-react';
 
 /**
@@ -76,16 +84,16 @@ const InteractiveCard = ({ children, className }: { children: React.ReactNode; c
 };
 
 export default function CicdPipelineAnalytics() {
-  const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation({ threshold: 0.2 });
-  const { ref: flowRef, isVisible: flowVisible } = useScrollAnimation();
-  const { ref: implementRef, isVisible: implementVisible } = useScrollAnimation();
+  const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: flowRef, isVisible: flowVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: implementRef, isVisible: implementVisible } = useScrollAnimation<HTMLDivElement>();
 
   const stages = [
     { icon: <Gitlab className="w-5 h-5 text-primary" />, sn: "Source", st: "GitLab", ss: "git push" },
     { icon: <Zap className="w-5 h-5 text-primary" />, sn: "Trigger", st: "Webhook", ss: "auto trigger" },
     { icon: <Settings className="w-5 h-5 text-primary" />, sn: "Build", st: "Jenkins", ss: "Jenkinsfile" },
     { icon: <Box className="w-5 h-5 text-primary" />, sn: "Package", st: "Docker", ss: "Dockerfile" },
-    { icon: <Database className="w-5 h-5 text-primary/50" />, sn: "Registry", st: "Nexus", ss: "docker image", faded: true },
+    { icon: <Database className="w-5 h-5 text-primary" />, sn: "Registry", st: "Nexus", ss: "docker image" },
   ];
 
   const breakdown = [
@@ -120,7 +128,6 @@ export default function CicdPipelineAnalytics() {
               heroVisible ? "opacity-100" : "opacity-0 translate-y-6"
             )}>
               <div className="space-y-6 mb-8">
-                <span className="text-label text-primary">Selected Archive · DevOps Engineering</span>
                 <h1 className="text-heading">
                   CI/CD Pipeline<br />Analytics
                 </h1>
@@ -143,9 +150,10 @@ export default function CicdPipelineAnalytics() {
                   animationDelay: `${heroVisible ? '0ms' : '0ms'}`,
                 }}
               >
-                <InteractiveCard className="flex items-center bg-secondary/60 rounded-xl border border-border py-5 px-8 hover:border-primary/50 transition-colors">
+                <InteractiveCard className="flex items-center py-5 px-8 card-surface bg-white group">
                   <div className="flex items-center w-full">
-                    <span className="text-label text-muted-foreground w-32 shrink-0">Role</span>
+                    <User className="w-4 h-4 text-primary mr-4 opacity-40 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-body font-bold text-primary w-32 shrink-0">Role</span>
                     <span className="text-body">DevOps Engineer</span>
                   </div>
                 </InteractiveCard>
@@ -157,9 +165,10 @@ export default function CicdPipelineAnalytics() {
                   animationDelay: `${heroVisible ? '60ms' : '0ms'}`,
                 }}
               >
-                <InteractiveCard className="flex items-center bg-secondary/60 rounded-xl border border-border py-5 px-8 hover:border-primary/50 transition-colors">
+                <InteractiveCard className="flex items-center py-5 px-8 card-surface bg-white group">
                   <div className="flex items-center w-full">
-                    <span className="text-label text-muted-foreground w-32 shrink-0">Pipeline</span>
+                    <GitBranch className="w-4 h-4 text-primary mr-4 opacity-40 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-body font-bold text-primary w-32 shrink-0">Pipeline</span>
                     <span className="text-body">GitLab → Jenkins → Docker → Nexus</span>
                   </div>
                 </InteractiveCard>
@@ -171,9 +180,10 @@ export default function CicdPipelineAnalytics() {
                   animationDelay: `${heroVisible ? '120ms' : '0ms'}`,
                 }}
               >
-                <InteractiveCard className="flex items-center bg-secondary/60 rounded-xl border border-border py-5 px-8 hover:border-primary/50 transition-colors">
+                <InteractiveCard className="flex items-center py-5 px-8 card-surface bg-white group">
                   <div className="flex items-center w-full">
-                    <span className="text-label text-muted-foreground w-32 shrink-0">App Stack</span>
+                    <Layers className="w-4 h-4 text-primary mr-4 opacity-40 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-body font-bold text-primary w-32 shrink-0">App Stack</span>
                     <span className="text-body">React · Flask API · ML Model</span>
                   </div>
                 </InteractiveCard>
@@ -185,15 +195,16 @@ export default function CicdPipelineAnalytics() {
                   animationDelay: `${heroVisible ? '180ms' : '0ms'}`,
                 }}
               >
-                <InteractiveCard className="flex items-start bg-secondary/60 rounded-xl border border-border py-5 px-8 hover:border-primary/50 transition-colors">
+                <InteractiveCard className="flex items-start py-5 px-8 card-surface bg-white group">
                   <div className="flex items-start w-full">
-                    <span className="text-label text-muted-foreground w-32 shrink-0 mt-1">Tools</span>
+                    <Wrench className="w-4 h-4 text-primary mr-4 mt-1 opacity-40 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-body font-bold text-primary w-32 shrink-0 mt-1">Tools</span>
                     <div className="flex flex-wrap gap-2">
                       {['GITLAB CI', 'JENKINS', 'DOCKER', 'NEXUS', 'DOCKERFILE'].map((tool) => (
                         <Badge 
                           key={tool} 
                           variant="outline" 
-                          className="rounded-full border-border text-secondary-foreground bg-background px-4 py-1 text-[10px] font-bold tracking-widest"
+                          className="rounded-full border-[#2564EB]/20 text-[#2564EB] bg-[#2564EB]/5 px-4 py-1 text-[12px] font-bold tracking-widest uppercase"
                         >
                         {tool}
                       </Badge>
@@ -231,7 +242,7 @@ export default function CicdPipelineAnalytics() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-0 relative mb-12">
-                  <div className="hidden md:block absolute top-[27px] left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent z-0"></div>
+                  <div className="hidden md:block absolute top-[27px] left-[10%] right-[10%] h-[1px] bg-primary/20 z-0"></div>
                   
                   {stages.map((stage, i) => (
                     <div key={i} className="flex flex-col items-center text-center group/stage relative z-10">
@@ -280,9 +291,9 @@ export default function CicdPipelineAnalytics() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
                 { tool: "GitLab", title: "Source & Version Control", desc: "Hosted the entire project on GitLab and configured webhook integration to automatically trigger the Jenkins pipeline on every push to the main branch." },
-                { tool: "Jenkins · Jenkinsfile", title: "Pipeline Orchestration", desc: "Authored a declarative Jenkinsfile defining all pipeline stages — checkout, build, and Docker image creation." },
-                { tool: "Docker · Dockerfile", title: "App Containerization", desc: "Wrote a Dockerfile containerizing both the React frontend and Flask ML API into a single deployable image." },
-                { tool: "Nexus Repository", title: "Docker Image Registry", desc: "Configured Nexus as a private Docker registry. Jenkins pushes the final versioned Docker image to Nexus." },
+                { tool: "Jenkins", title: "Pipeline Orchestration", desc: "Authored a declarative Jenkinsfile defining all pipeline stages — checkout, build, and Docker image creation." },
+                { tool: "Docker", title: "App Containerization", desc: "Wrote a Dockerfile containerizing both the React frontend and Flask ML API into a single deployable image." },
+                { tool: "Nexus", title: "Docker Image Registry", desc: "Configured Nexus as a private Docker registry. Jenkins pushes the final versioned Docker image to Nexus." },
                 { tool: "Flask API", title: "ML Model Backend", desc: "The Flask API serves the trained ML model that predicts heart disease risk from patient input parameters." },
                 { tool: "React", title: "Frontend Interface", desc: "The React frontend collects patient health inputs and communicates with the Flask API to display risk predictions." },
               ].map((card, i) => (
@@ -293,11 +304,12 @@ export default function CicdPipelineAnalytics() {
                     animationDelay: `${implementVisible ? i * 80 : 0}ms`,
                   }}
                 >
-                  <InteractiveCard className="bg-secondary/40 border border-border p-8 rounded-2xl hover:border-primary/50 transition-colors">
+                  <InteractiveCard className="card-surface p-8 bg-white hover:border-primary/50 transition-colors">
                     <div className="space-y-4">
-                      <span className="text-label text-primary">{card.tool}</span>
-                      <h3 className="text-card-title leading-tight">{card.title}</h3>
-                      <p className="text-body leading-relaxed">{card.desc}</p>
+                      <h3 className="text-body font-bold text-primary leading-tight">{card.title}</h3>
+                      <p className="text-body leading-relaxed">
+                        <span className="font-bold">{card.tool}:</span> {card.desc}
+                      </p>
                     </div>
                   </InteractiveCard>
                 </div>
@@ -353,24 +365,32 @@ export default function CicdPipelineAnalytics() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InteractiveCard className="bg-secondary/40 border border-border p-8 rounded-2xl hover:border-primary/50 transition-colors">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="w-2 h-2 rounded-full bg-primary mt-1.5"></div>
-                  <h3 className="text-card-title">The Challenge</h3>
+              <InteractiveCard className="card-surface p-8 bg-white hover:border-primary/50 transition-colors group">
+                <div className="flex gap-6 items-start">
+                  <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 mt-1">
+                    <AlertTriangle className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-body font-bold text-primary">The Challenge</h3>
+                    <p className="text-body leading-relaxed">
+                      ML applications introduce unique CI/CD complexity — the pipeline must containerize not just a web app but an entire Python ML environment alongside a React frontend.
+                    </p>
+                  </div>
                 </div>
-                <p className="text-body">
-                  ML applications introduce unique CI/CD complexity — the pipeline must containerize not just a web app but an entire Python ML environment alongside a React frontend.
-                </p>
               </InteractiveCard>
 
-              <InteractiveCard className="bg-secondary/40 border border-border p-8 rounded-2xl hover:border-primary/50 transition-colors">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="w-2 h-2 rounded-full bg-primary mt-1.5"></div>
-                  <h3 className="text-card-title">The Outcome</h3>
+              <InteractiveCard className="card-surface p-8 bg-white hover:border-primary/50 transition-colors group">
+                <div className="flex gap-6 items-start">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 mt-1">
+                    <Award className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="text-body font-bold text-primary">The Outcome</h3>
+                    <p className="text-body leading-relaxed">
+                      A fully automated pipeline where every git push triggers a clean build, packages the application into a versioned Docker image, and stores it in the Nexus registry.
+                    </p>
+                  </div>
                 </div>
-                <p className="text-body">
-                  A fully automated pipeline where every git push triggers a clean build, packages the application into a versioned Docker image, and stores it in the Nexus registry.
-                </p>
               </InteractiveCard>
             </div>
           </section>

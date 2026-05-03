@@ -54,11 +54,11 @@ export default function NotFound() {
           Error 404
         </div>
         <h1 className="heading font-heading font-semibold text-[#475569] leading-[1.25] tracking-[0.02em] mb-7" style={{ fontSize: 'clamp(22px, 3vw, 38px)' }}>
-          You're in uncharted <strong className="text-[#F8FAFC] font-bold">territory!</strong>
+          You're in uncharted <strong className="text-[#F5F5F7] font-bold">territory!</strong>
         </h1>
         <Link 
           href="/" 
-          className="return font-body text-[15px] font-medium text-[#F8FAFC] underline underline-offset-4 decoration-[#2563EB] hover:text-[#2563EB] transition-colors tracking-[0.02em]"
+          className="return font-body text-[15px] font-medium text-[#F5F5F7] underline underline-offset-4 decoration-[#2563EB] hover:text-[#2563EB] transition-colors tracking-[0.02em]"
         >
           Return home
         </Link>
@@ -66,7 +66,7 @@ export default function NotFound() {
 
       {/* Signature Branding */}
       <div className="km absolute bottom-7 left-1/2 -translate-x-1/2 font-heading font-bold text-[14px] tracking-[0.1em] z-20">
-        <span className="text-[#F8FAFC]">K</span>
+        <span className="text-[#F5F5F7]">K</span>
         <span className="text-[#2563EB]">M</span>
       </div>
 

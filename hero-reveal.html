@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khush Makwana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;}
+
+/* ─── FONTS ─────────────────────────────── */
+:root{
+  --fd:'Clash Display',sans-serif;
+  --fb:'Space Grotesk',sans-serif;
+  --fm:'DM Mono',monospace;
+}
+
+/* ═══════════════════════════════════════════
+   WRAPPER — positions both screens identically
+═══════════════════════════════════════════ */
+.stage{
+  position:relative;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  cursor:default;
+}
+
+/* ═══════════════════════════════════════════
+   SHARED SCREEN LAYOUT
+   Both screens use identical structure
+═══════════════════════════════════════════ */
+.screen{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-rows:auto 1fr;
+  overflow:hidden;
+}
+
+/* ─── COLORED SCREEN (behind) ─────────── */
+.screen-color{
+  background:#080b14;
+  z-index:1;
+}
+
+/* ambient glows */
+.screen-color::before{
+  content:'';
+  position:absolute;
+  top:-140px;right:-100px;
+  width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,255,.20) 0%,transparent 65%);
+  pointer-events:none;
+}
+.screen-color::after{
+  content:'';
+  position:absolute;
+  bottom:-100px;left:-80px;
+  width:420px;height:420px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(120,50,255,.13) 0%,transparent 65%);
+  pointer-events:none;
+}
+
+/* ─── WIREFRAME SCREEN (front, clipped) ── */
+.screen-wire{
+  background:#ffffff;
+  z-index:2;
+  /* clip starts at right edge → 0% colored visible
+     JS will animate this to ~12% then user drags */
+  clip-path:inset(0 0 0 100%);
+}
+
+/* ═══════════════════════════════════════════
+   NAV  — shared layout, different skin
+═══════════════════════════════════════════ */
+nav{
+  display:flex;
+  align-items:center;
+  padding:28px 64px;
+  border-bottom-width:1px;
+  border-bottom-style:solid;
+  position:relative;
+  z-index:5;
+}
+.screen-color nav{border-bottom-color:#1a1f35;}
+.screen-wire  nav{border-bottom-color:#d0d0d0;}
+
+.logo{
+  font-family:var(--fd);
+  font-size:17px;
+  font-weight:700;
+  letter-spacing:-.02em;
+}
+.screen-color .logo{color:#fff;}
+.screen-color .logo span{color:#2563ff;}
+.screen-wire  .logo{color:transparent;-webkit-text-stroke:1.5px #111;}
+.screen-wire  .logo span{color:transparent;-webkit-text-stroke:1.5px #111;}
+
+.nav-links{
+  display:flex;
+  gap:36px;
+  margin-left:auto;
+}
+.nav-links a{
+  font-family:var(--fm);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  text-decoration:none;
+  cursor:default;
+}
+.screen-color .nav-links a{color:#505878;}
+.screen-wire  .nav-links a{
+  color:#333;
+  padding-bottom:2px;
+  border-bottom:1px solid #333;
+}
+
+/* ═══════════════════════════════════════════
+   HERO BODY
+═══════════════════════════════════════════ */
+.hero-body{
+  display:grid;
+  grid-template-columns:1fr 400px;
+  align-items:center;
+  padding:0 64px;
+  gap:48px;
+  position:relative;
+  z-index:5;
+  height:100%;
+}
+
+/* ── LEFT CONTENT ── */
+.left{display:flex;flex-direction:column;justify-content:center;}
+
+/* tags */
+.tags{display:flex;gap:8px;margin-bottom:24px;}
+.tag{
+  font-family:var(--fm);
+  font-size:10px;
+  font-weight:500;
+  padding:4px 11px;
+  border-radius:3px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+/* color tags */
+.screen-color .tag-devops{background:rgba(37,99,255,.15);color:#7aabff;border:1px solid rgba(37,99,255,.28);}
+.screen-color .tag-ux{background:rgba(120,50,255,.13);color:#b49dff;border:1px solid rgba(120,50,255,.25);}
+/* wire tags — outline only, black */
+.screen-wire .tag-devops,
+.screen-wire .tag-ux{background:transparent;color:#111;border:1.5px solid #111;}
+
+/* name */
+.name{
+  font-family:var(--fd);
+  font-weight:700;
+  line-height:.95;
+  letter-spacing:-.035em;
+  margin-bottom:20px;
+}
+.name-first{font-size:clamp(56px,7.5vw,100px);display:block;}
+.name-last {font-size:clamp(56px,7.5vw,100px);display:block;}
+
+/* color name */
+.screen-color .name-first{color:#fff;}
+.screen-color .name-last {color:#2563ff;}
+/* wire name — stroke only, no fill */
+.screen-wire .name-first,
+.screen-wire .name-last{
+  color:transparent;
+  -webkit-text-stroke:1.8px #111;
+}
+
+/* tagline */
+.tagline{
+  font-family:var(--fm);
+  font-size:12px;
+  font-style:italic;
+  letter-spacing:.04em;
+  margin-bottom:14px;
+}
+.screen-color .tagline{color:#3a4060;}
+.screen-wire  .tagline{
+  color:#999;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.screen-wire .tagline::after{
+  content:'';
+  flex:1;
+  height:0;
+  border-top:1px dashed #ccc;
+}
+
+/* body text */
+.body-text{
+  font-family:var(--fb);
+  font-size:15px;
+  line-height:1.75;
+  max-width:420px;
+  margin-bottom:36px;
+}
+.screen-color .body-text{color:#505878;}
+
+/* wire body — text as ruled lines */
+.wire-lines{display:flex;flex-direction:column;gap:8px;margin-bottom:36px;max-width:420px;}
+.wire-line{
+  height:10px;
+  background:transparent;
+  border:1px solid #d0d0d0;
+  border-radius:2px;
+}
+
+/* cta buttons */
+.btns{display:flex;gap:12px;}
+.btn-primary{
+  font-family:var(--fm);
+  font-size:11px;
+  font-weight:500;
+  padding:13px 28px;
+  border-radius:6px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  cursor:default;
+}
+.btn-ghost{
+  font-family:var(--fm);
+  font-size:11px;
+  font-weight:500;
+  padding:13px 22px;
+  border-radius:6px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  cursor:default;
+}
+/* color btns */
+.screen-color .btn-primary{background:#2563ff;color:#fff;border:none;}
+.screen-color .btn-ghost  {background:transparent;color:#505878;border:1px solid #1a1f35;}
+/* wire btns */
+.screen-wire .btn-primary{background:#111;color:#fff;border:1.5px solid #111;}
+.screen-wire .btn-ghost  {background:transparent;color:#555;border:1.5px solid #555;}
+
+/* socials */
+.socials{display:flex;gap:14px;margin-top:32px;}
+.social-icon{
+  width:38px;height:38px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);
+  font-size:11px;
+  cursor:default;
+}
+.screen-color .social-icon{border:1px solid #1a1f35;color:#505878;}
+.screen-wire  .social-icon{border:1.5px solid #555;color:#555;}
+
+/* ── RIGHT PANEL — CLI / TERMINAL ── */
+.right{position:relative;height:100%;display:flex;align-items:center;}
+
+.terminal{
+  width:100%;
+  border-radius:12px;
+  overflow:hidden;
+}
+/* color terminal */
+.screen-color .terminal{
+  background:#0d1120;
+  border:1px solid #1a1f35;
+}
+/* wire terminal */
+.screen-wire .terminal{
+  background:#fff;
+  border:2px solid #222;
+}
+
+.term-bar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:14px 18px;
+  border-bottom-width:1px;
+  border-bottom-style:solid;
+}
+.screen-color .term-bar{
+  background:#080b14;
+  border-bottom-color:#1a1f35;
+}
+.screen-wire .term-bar{
+  background:#f0f0f0;
+  border-bottom-color:#ccc;
+}
+
+.term-dot{width:11px;height:11px;border-radius:50%;}
+/* color dots */
+.screen-color .term-dot:nth-child(1){background:#ff5f57;}
+.screen-color .term-dot:nth-child(2){background:#febc2e;}
+.screen-color .term-dot:nth-child(3){background:#28c840;}
+/* wire dots — outline only */
+.screen-wire .term-dot{background:transparent;border:1.5px solid #555;}
+
+.term-title{
+  font-family:var(--fm);
+  font-size:11px;
+  letter-spacing:.06em;
+  margin-left:auto;
+}
+.screen-color .term-title{color:#2a3050;}
+.screen-wire  .term-title{color:#888;}
+
+.term-body{padding:20px 22px;display:flex;flex-direction:column;gap:4px;}
+
+/* color terminal lines */
+.tl{font-family:var(--fm);font-size:12px;line-height:1.9;}
+.tc{color:#7aabff;}
+.tok{color:#34d058;}
+.tm{color:#232840;}
+.tp{color:#b49dff;}
+.tw{color:#f0c070;}
+.tcur{
+  display:inline-block;
+  width:7px;height:14px;
+  background:#7aabff;
+  vertical-align:middle;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* wire terminal lines — ruled boxes */
+.wterm-lines{display:flex;flex-direction:column;gap:9px;padding:20px 22px;}
+.wterm-line{
+  height:11px;
+  background:transparent;
+  border:1px solid #d5d5d5;
+  border-radius:2px;
+}
+/* first line of each command — slightly darker to suggest prompt */
+.wterm-line.prompt{border-color:#aaa;border-left:3px solid #aaa;}
+
+/* ═══════════════════════════════════════════
+   SLIDER
+═══════════════════════════════════════════ */
+.slider{
+  position:absolute;
+  top:0;bottom:0;
+  width:2px;
+  background:#ffffff;
+  z-index:100;
+  /* left set by JS */
+  /* only draggable via handle — pointer-events on track = none */
+  pointer-events:none;
+}
+
+.slider-handle{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:48px;height:48px;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid #111;
+  display:flex;align-items:center;justify-content:center;
+  cursor:grab;
+  pointer-events:all; /* only handle is interactive */
+  box-shadow:0 4px 20px rgba(0,0,0,.35);
+  user-select:none;
+  transition:transform .15s,box-shadow .15s;
+}
+.slider-handle:active{cursor:grabbing;transform:translate(-50%,-50%) scale(.94);}
+.slider-handle svg{width:20px;height:20px;pointer-events:none;}
+
+/* label pills */
+.slider-labels{
+  position:absolute;
+  top:28px;left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;gap:5px;
+  align-items:center;
+  pointer-events:none;
+}
+.slbl{
+  font-family:var(--fm);
+  font-size:9px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:2px;white-space:nowrap;
+}
+.slbl-wire{background:#111;color:#fff;}
+.slbl-color{background:#fff;color:#111;border:1px solid #ccc;}
+
+/* bottom hint */
+.hint{
+  position:absolute;
+  bottom:28px;left:50%;
+  transform:translateX(-50%);
+  font-family:var(--fm);
+  font-size:9px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:#555;
+  background:#fff;
+  border:1px solid #ccc;
+  padding:5px 14px;border-radius:20px;
+  white-space:nowrap;
+  z-index:200;
+  transition:opacity .5s;
+  pointer-events:none;
+}
+
+/* responsive */
+@media(max-width:768px){
+  nav{padding:20px 24px;}
+  .nav-links{gap:20px;}
+  .hero-body{grid-template-columns:1fr;padding:32px 24px;gap:32px;}
+  .right{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- ═══ SCREEN A — FULL COLOR (behind) ═══ -->
+  <div class="screen screen-color" id="screenColor">
+    <nav>
+      <div class="logo">K<span>M</span></div>
+      <div class="nav-links">
+        <a>Intro</a><a>My Lab</a><a>My Vault</a><a>Contact</a>
+      </div>
+    </nav>
+    <div class="hero-body">
+      <div class="left">
+        <div class="tags">
+          <span class="tag tag-devops">DevOps</span>
+          <span class="tag tag-ux">UI / UX</span>
+        </div>
+        <div class="name">
+          <span class="name-first">Khush</span>
+          <span class="name-last">Makwana</span>
+        </div>
+        <p class="tagline">Architecting Logic Into Art</p>
+        <p class="body-text">
+          Infrastructure that deploys itself.<br>
+          Interfaces that feel inevitable.<br>
+          Both, from one engineer.
+        </p>
+        <div class="btns">
+          <button class="btn-primary">View Archive →</button>
+          <button class="btn-ghost">Resume</button>
+        </div>
+        <div class="socials">
+          <div class="social-icon">in</div>
+          <div class="social-icon">gh</div>
+          <div class="social-icon">ig</div>
+          <div class="social-icon">@</div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="terminal">
+          <div class="term-bar">
+            <div class="term-dot"></div>
+            <div class="term-dot"></div>
+            <div class="term-dot"></div>
+            <span class="term-title">PIPELINE · MAIN</span>
+          </div>
+          <div class="term-body">
+            <div class="tl"><span class="tc">$</span> <span class="tok">kubectl apply</span> <span class="tm">-f deploy.yml</span></div>
+            <div class="tl"><span class="tp">✓ deployment.apps/portfolio created</span></div>
+            <div class="tl"><span class="tp">✓ pods running &nbsp;3/3</span></div>
+            <div class="tl" style="margin-top:6px"><span class="tc">$</span> <span class="tok">figma</span> <span class="tm">export --tokens design.json</span></div>
+            <div class="tl"><span class="tw">↳ 42 tokens synced to codebase</span></div>
+            <div class="tl" style="margin-top:6px"><span class="tc">$</span> <span class="tok">git commit</span> <span class="tm">-m</span> <span class="tw">"logic meets art"</span></div>
+            <div class="tl"><span class="tp">✓ pipeline passing &nbsp;</span><span class="tcur"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN B — WIREFRAME B&W (front) ═══ -->
+  <div class="screen screen-wire" id="screenWire">
+    <nav>
+      <div class="logo">K<span>M</span></div>
+      <div class="nav-links">
+        <a>Intro</a><a>My Lab</a><a>My Vault</a><a>Contact</a>
+      </div>
+    </nav>
+    <div class="hero-body">
+      <div class="left">
+        <div class="tags">
+          <span class="tag tag-devops">DevOps</span>
+          <span class="tag tag-ux">UI / UX</span>
+        </div>
+        <div class="name">
+          <span class="name-first">Khush</span>
+          <span class="name-last">Makwana</span>
+        </div>
+        <p class="tagline">Architecting Logic Into Art</p>
+        <!-- body as ruled lines -->
+        <div class="wire-lines">
+          <div class="wire-line" style="width:100%"></div>
+          <div class="wire-line" style="width:86%"></div>
+          <div class="wire-line" style="width:64%"></div>
+        </div>
+        <div class="btns">
+          <button class="btn-primary">View Archive →</button>
+          <button class="btn-ghost">Resume</button>
+        </div>
+        <div class="socials">
+          <div class="social-icon">in</div>
+          <div class="social-icon">gh</div>
+          <div class="social-icon">ig</div>
+          <div class="social-icon">@</div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="terminal">
+          <div class="term-bar">
+            <div class="term-dot"></div>
+            <div class="term-dot"></div>
+            <div class="term-dot"></div>
+            <span class="term-title">PIPELINE · MAIN</span>
+          </div>
+          <!-- wire terminal — ruled lines -->
+          <div class="wterm-lines">
+            <div class="wterm-line prompt" style="width:88%"></div>
+            <div class="wterm-line" style="width:76%"></div>
+            <div class="wterm-line" style="width:60%"></div>
+            <div class="wterm-line prompt" style="width:82%"></div>
+            <div class="wterm-line" style="width:70%"></div>
+            <div class="wterm-line prompt" style="width:78%"></div>
+            <div class="wterm-line" style="width:55%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDER ═══ -->
+  <div class="slider" id="slider">
+    <div class="slider-labels">
+      <div class="slbl slbl-wire">← Wireframe</div>
+      <div class="slbl slbl-color">Design →</div>
+    </div>
+    <div class="slider-handle" id="handle">
+      <!-- drag arrows icon -->
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 8L4 10L7 12" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13 8L16 10L13 12" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="4" y1="10" x2="16" y2="10" stroke="#111" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="hint" id="hint">drag handle to reveal</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const stage  = document.getElementById('stage');
+  const wire   = document.getElementById('screenWire');
+  const slider = document.getElementById('slider');
+  const handle = document.getElementById('handle');
+  const hint   = document.getElementById('hint');
+
+  /* ── state ── */
+  let pct        = 100;   // start fully right (wireframe covers all)
+  let dragging   = false;
+  let hintGone   = false;
+  let introRunning = true;
+  let rafId;
+
+  /* ── apply position ──────────────────────────
+     wire  clip-path: inset(0 right 0 0)
+       right = 100% - pct  → at pct=100, right=0%  (full wireframe)
+                             at pct=12,  right=88% (mostly colored)
+  ─────────────────────────────────────────────── */
+  function applyPct(p, animated){
+    pct = Math.max(0, Math.min(100, p));
+    const right = (100 - pct).toFixed(3) + '%';
+
+    if(animated){
+      wire.style.transition   = 'clip-path .9s cubic-bezier(.4,0,.2,1)';
+      slider.style.transition = 'left .9s cubic-bezier(.4,0,.2,1)';
+    } else {
+      wire.style.transition   = 'none';
+      slider.style.transition = 'none';
+    }
+
+    wire.style.clipPath = `inset(0 ${right} 0 0)`;
+    slider.style.left   = pct + '%';
+  }
+
+  /* ── intro: eased slide from 100 → 12% ─────── */
+  function runIntro(){
+    const start    = performance.now();
+    const duration = 1400; // ms
+    const from     = 100;
+    const to       = 12;
+
+    function easeInOutCubic(t){
+      return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+    }
+
+    function frame(now){
+      if(!introRunning) return;
+      const elapsed = now - start;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = easeInOutCubic(t);
+      applyPct(from + (to - from) * eased, false);
+      if(t < 1){
+        rafId = requestAnimationFrame(frame);
+      } else {
+        introRunning = false;
+        startOscillate();
+      }
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+
+  /* ── gentle oscillation at 10–18% after intro ─ */
+  function startOscillate(){
+    let dir = -1;
+    const speed = 0.018; // pct per frame
+    const min   = 10;
+    const max   = 18;
+
+    function osc(){
+      if(dragging || !introRunning === false && dragging) return;
+      // stop oscillating as soon as user drags
+      if(dragging){ return; }
+      pct += dir * speed;
+      if(pct <= min){ dir = 1; pct = min; }
+      if(pct >= max){ dir = -1; pct = max; }
+      applyPct(pct, false);
+      rafId = requestAnimationFrame(osc);
+    }
+    rafId = requestAnimationFrame(osc);
+  }
+
+  /* ── get pct from pointer clientX ── */
+  function pctFromX(clientX){
+    const r = stage.getBoundingClientRect();
+    return ((clientX - r.left) / r.width) * 100;
+  }
+
+  /* ── hide hint on first drag ── */
+  function hideHint(){
+    if(!hintGone){
+      hint.style.opacity = '0';
+      hintGone = true;
+    }
+  }
+
+  /* ── MOUSE events on handle only ── */
+  handle.addEventListener('mousedown', function(e){
+    e.preventDefault();
+    cancelAnimationFrame(rafId);
+    introRunning = false;
+    dragging = true;
+    hideHint();
+  });
+
+  window.addEventListener('mousemove', function(e){
+    if(!dragging) return;
+    applyPct(pctFromX(e.clientX), false);
+  });
+
+  window.addEventListener('mouseup', function(){
+    dragging = false;
+  });
+
+  /* ── TOUCH events on handle only ── */
+  handle.addEventListener('touchstart', function(e){
+    e.preventDefault();
+    cancelAnimationFrame(rafId);
+    introRunning = false;
+    dragging = true;
+    hideHint();
+  }, { passive: false });
+
+  window.addEventListener('touchmove', function(e){
+    if(!dragging) return;
+    applyPct(pctFromX(e.touches[0].clientX), false);
+  }, { passive: true });
+
+  window.addEventListener('touchend', function(){
+    dragging = false;
+  });
+
+  /* ── kick off ── */
+  // set initial state instantly (full wireframe)
+  applyPct(100, false);
+
+  // after fonts load, run the intro animation
+  document.fonts.ready.then(function(){
+    setTimeout(runIntro, 300);
+  });
+
+})();
+</script>
+</body>
+</html>

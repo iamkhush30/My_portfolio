@@ -1,4 +1,4 @@
-import LayeredPanelReveal from '@/components/Animations&Motion/ScrollReveals/tsx/CinematicScroll';
+import LayeredPanelReveal from '@/features/portfolio/components/animations/cinematic-scroll';
 
 export default function CinematicScrollPage() {
     return <LayeredPanelReveal />;
