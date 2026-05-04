@@ -313,14 +313,7 @@ export const Hero = () => {
               <span className="hero-name-last">Makwana</span>
             </h1>
             <p className="text-label text-primary mt-3 mb-4 tracking-widest uppercase">DevOps Engineer & UI/UX Designer</p>
-            <p className="hero-tagline text-body text-left">Where infrastructure meets intention.</p>
-            <div className="hero-text-wrapper">
-              <p className="hero-body-text text-body text-left">
-                I design the interfaces people actually enjoy using.
-                <br />
-                I build CI/CD pipelines, containerized infrastructure and deployment
-              </p>
-            </div>
+            <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
             <div className="hero-btns">
               <a href="#work" className="hero-btn-primary text-button">View Archive →</a>
@@ -390,14 +383,7 @@ export const Hero = () => {
               <span className="hero-name-last">Makwana</span>
             </h1>
             <p className="text-label text-primary mt-3 mb-4 tracking-widest uppercase">DevOps Engineer & UI/UX Designer</p>
-            <p className="hero-tagline text-body text-left">Where infrastructure meets intention.</p>
-            <div className="hero-text-wrapper">
-              <p className="hero-body-text text-body text-left">
-                I design the interfaces people actually enjoy using.
-                <br />
-                I build CI/CD pipelines, containerized infrastructure and deployment
-              </p>
-            </div>
+            <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
             <div className="hero-btns">
               <a href="#work" className="hero-btn-primary text-button">View Archive →</a>
@@ -446,6 +432,31 @@ export const Hero = () => {
           drag to reveal
         </div>
       </div>
+
+      {/* Ambient glows matching footer */}
+      <div
+        className="pointer-events-none absolute top-0 right-0"
+        style={{
+          width: "600px",
+          height: "400px",
+          background: "radial-gradient(ellipse at 100% 0%, rgba(37, 99, 235, 0.4) 0%, rgba(37, 99, 235, 0.15) 40%, transparent 70%)",
+          filter: "blur(92px)",
+          opacity: 0.6,
+        }}
+        aria-hidden
+      />
+
+      <div
+        className="pointer-events-none absolute bottom-0 left-0"
+        style={{
+          width: "500px",
+          height: "300px",
+          background: "radial-gradient(ellipse at 0% 100%, rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0.08) 50%, transparent 80%)",
+          filter: "blur(82px)",
+          opacity: 0.5,
+        }}
+        aria-hidden
+      />
 
     </section>
   );

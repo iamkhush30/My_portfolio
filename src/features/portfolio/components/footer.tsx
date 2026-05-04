@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 const NAV_LINKS = [
@@ -19,33 +19,57 @@ const SOCIAL_LINKS = [
 
 export const Footer: React.FC = () => {
   const year = new Date().getFullYear();
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const dayDate = new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "Asia/Kolkata",
+  }).format(currentTime);
+
+  const timeZoneLabel = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kolkata",
+    timeZoneName: "short",
+  }).formatToParts(currentTime).find((part) => part.type === "timeZoneName")?.value ?? "IST";
 
   return (
     <footer
-      className="relative bg-[var(--dark-bg)] border-t border-[var(--dark-border)] overflow-hidden min-h-[70vh]"
+      className="relative bg-[var(--dark-bg)] border-t border-[var(--dark-border)] overflow-hidden"
       aria-label="Site footer"
     >
       {/* ── Main Grid: 3 columns on desktop ── */}
       <div
-        className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr]"
+        className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] md:gap-x-8 lg:gap-x-12"
         style={{ borderBottom: "1px solid var(--footer-line)" }}
       >
         {/* Col 1 — Brand */}
-        <div className="footer-box">
+        <div className="footer-box min-h-[240px] md:min-h-[320px]">
           <p className="text-heading text-[var(--dark-text)]">
             Let's Connect
           </p>
-          <p className="text-card-body text-[var(--dark-text-muted)] mt-[var(--space-md)] max-w-[260px]">
-            Architecting logic into art — bridging DevOps infrastructure with human-centered design.
+          <p className="text-body text-[var(--dark-text-muted)] mt-[var(--space-md)] max-w-[260px]">
+            Don't hesitate to get in touch.
+            Always open to the right conversations.
           </p>
         </div>
 
         {/* Col 2 — Navigation */}
-        <div className="footer-box">
+        <div className="footer-box min-h-[240px] md:min-h-[320px]">
           <p className="text-label text-[var(--dark-text-muted)] mb-[var(--space-lg)]">
             Navigation
           </p>
-          <nav className="flex flex-col gap-[var(--space-sm)]">
+          <nav className="flex flex-col gap-[var(--space-md)]"
+>
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
@@ -60,11 +84,12 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Col 3 — Connect */}
-        <div className="footer-box" style={{ borderRight: "none" }}>
+        <div className="footer-box min-h-[240px] md:min-h-[320px]" style={{ borderRight: "none" }}>
           <p className="text-label text-[var(--dark-text-muted)] mb-[var(--space-lg)]">
             Connect
           </p>
-          <div className="flex flex-col gap-[var(--space-sm)]">
+          <div className="flex flex-col gap-[var(--space-md)]"
+>
             {SOCIAL_LINKS.map((link) => (
               <a
                 key={link.label}
@@ -78,6 +103,7 @@ export const Footer: React.FC = () => {
               </a>
             ))}
           </div>
+          
         </div>
       </div>
 
@@ -85,17 +111,20 @@ export const Footer: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
         <div className="footer-box" style={{ borderBottom: "none" }}>
           <p className="text-label text-[var(--dark-text-muted)]">
-            © {year} Khush Makwana. All rights reserved.
+            © {year} Khush Makwana
           </p>
         </div>
-        <div
-          className="footer-box"
-          style={{ borderRight: "none", borderBottom: "none" }}
-        >
-          <p className="text-label text-[var(--dark-text-muted)] md:text-right">
-            Built with Next.js · Deployed on Firebase
-          </p>
-        </div>
+       <div
+  className="footer-box flex flex-col items-end justify-center"
+  style={{ borderRight: "none", borderBottom: "none" }}
+>
+  <p className="text-label text-[var(--dark-text-muted)]">
+    {dayDate}
+  </p>
+  <p className="text-label text-[var(--dark-text-muted)] mt-1">
+    {timeZoneLabel} · UTC +5:30
+  </p>
+</div>
       </div>
 
       {/* ── Ambient glow (decoration) ── */}

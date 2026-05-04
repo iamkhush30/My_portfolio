@@ -53,7 +53,7 @@ export const PotentialSection = () => {
   }, [scrollProgress]);
 
   return (
-    <div id="potential-section" className="relative z-10 flex flex-col items-center justify-center overflow-visible py-[var(--space-xl)]">
+    <div id="potential-section" className="relative z-10 flex flex-col items-center justify-center overflow-visible py-6">
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{ backgroundImage: 'radial-gradient(circle, #0F172A 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
@@ -68,9 +68,11 @@ export const PotentialSection = () => {
         <div className="relative w-full max-w-7xl aspect-[2/1] md:aspect-[2.8/1] flex items-end justify-center overflow-hidden">
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center justify-center text-center gap-8 w-full max-w-sm md:max-w-md">
-            <p className="text-quote text-center text-[#475569] max-w-[320px]">
-              "Excellence Is Not A Destination, But A State Of Constant Acceleration."
-            </p>
+              <p className="text-quote text-center text-[#475569] max-w-[320px]">
+                Pushing toward Sharper designs, more reliable systems, deeper 
+                
+                understanding. The gauge never stays still.
+              </p>
 
             <div className="flex items-center justify-center w-full">
               <RippleButton className="pill-btn group h-14 px-10 rounded-[45px] border-2 border-[#333] bg-[#111] cursor-pointer overflow-hidden outline-none flex items-center justify-center gap-4 transition-all duration-200 min-w-[200px]">
@@ -121,6 +123,14 @@ export const PotentialSection = () => {
 
         </div>
       </div>
+
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-px left-0 right-0 h-16 md:h-24 pointer-events-none z-[1]"
+        style={{
+          background: 'linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.96) 22%, rgba(255,255,255,0.75) 55%, rgba(255,255,255,0) 100%)',
+        }}
+      />
     </div>
   );
 };

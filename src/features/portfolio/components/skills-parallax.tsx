@@ -18,16 +18,16 @@ const skills: SkillItem[] = [
   {
     title: "UI/UX Design",
     bgTitle: "Design",
-    description: "Crafting intuitive digital journeys where every pixel serves a purpose. I focus on behavioral science and aesthetic precision to create interfaces that users don't just use—they feel.",
+    description: `I design interfaces that are clear, functional, and visually deliberate from initial wireframes to pixel-refined screens in Figma. I approach each project by understanding the context first, then building toward a design that works before making it look good.`,
     icon: <Palette className="w-10 h-10" />,
-    tags: ["User Research", "User Flow Design", "UI Design", "Prototyping"]
+    tags: ["UX Design", "UI Design", "Wireframing", "Prototyping"]
   },
   {
     title: "DevOps Engineering",
     bgTitle: "Systems",
-    description: "Architecting the invisible engines that power modern applications. I specialize in CI/CD pipelines and cloud infrastructure to ensure seamless, scalable, and secure deployments.",
+    description: `I build automated pipelines that handle everything from code commit to containerized deployment — including artifact management with Nexus Repository Manager and container orchestration with Kubernetes. No manual handoffs, no deployment guesswork.`,
     icon: <Server className="w-10 h-10" />,
-    tags: ["GitHub", "Docker", "Nexus", "Jenkins"]
+    tags: ["Pipeline Automation", "Artifact Management", "build Automation"]
   }
 ];
 
@@ -72,9 +72,9 @@ const SkillCard = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative w-full lg:w-[55%] min-h-[400px] p-8 md:p-12 bg-white card-surface transition-all duration-700 group opacity-0 flex flex-col overflow-hidden hover:border-primary/50",
+        "relative w-full lg:w-[62%] min-h-[460px] p-8 md:p-12 bg-white card-surface transition-all duration-700 group opacity-0 flex-none flex flex-col overflow-hidden hover:border-primary/50",
         isVisible && "animate-in fade-in slide-in-from-bottom-24 fill-mode-both opacity-100",
-        isEven ? "lg:mr-12 -rotate-1" : "lg:ml-12 rotate-1"
+        isEven ? "lg:mr-12 -rotate-1" : "lg:ml-12 -rotate-1"
       )}
       style={{ 
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,

@@ -6,22 +6,33 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 export const AboutEducation: React.FC = () => {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
-  
-  const fullText = "I am Khush Makwana, a hybrid engineer specializing in building high-performance DevOps infrastructure and human-centered UI/UX design. With a foundation in systems architecture and a passion for aesthetic precision, I bridge the gap between back-end reliability and front-end excellence. My approach is rooted in the belief that great engineering should not only work flawlessly but also feel intuitive and look exceptional.";
+
+  const fullText = `I'm Khush Makwana — a Computer Science student who works 
+across DevOps engineering and UI/UX design. I've built 
+CI/CD pipelines using GitLab, Jenkins, Docker, and Kubernetes, 
+taking projects from code commit to containerized deployment 
+without manual steps. On the design side, I've designed 50+ 
+screens for a different projects, created visual content 
+that contributed to significant engagement growth for a 
+financial services client, and guided university students 
+through Figma and interface design fundamentals. I don't 
+treat these as separate careers — the engineering makes my 
+designs more buildable, and the design makes my systems 
+more considered.`;
 
   const words = fullText.split(" ");
   const totalLetters = fullText.length;
-  
+
   const { scrollYProgress } = useScroll({
     target: textRef,
-    offset: ["start 0.9", "start 0.35"]
+    offset: ["start 0.85", "start 0.24"]
   });
 
   let letterCount = 0;
 
   return (
-    <section 
-      id="about" 
+    <section
+      id="about"
       ref={containerRef}
       className="relative z-20 h-screen flex items-start pt-[12vh] overflow-hidden bg-white border-t border-border shadow-[0_-40px_100px_-20px_rgba(15,23,42,0.1)]"
     >
@@ -34,15 +45,19 @@ export const AboutEducation: React.FC = () => {
             </div>
             <div className="mt-16 lg:mt-24 flex flex-col gap-10">
               <div className="flex flex-col gap-2">
-                <span className="text-label text-primary">Philosophy</span>
-                <span className="text-card-title text-foreground">Logic Meets Art</span>
+                <span className="text-label text-primary">CURRENT FOCUS</span>
+                <span className="text-body text-foreground leading-[1.45]">
+                  Learning Kubernetes orchestration
+                  <br />
+                  and Terraform infrastructure-as-code
+                </span>
               </div>
             </div>
           </div>
 
           <div className="lg:col-span-8 flex items-center">
             <div className="max-w-4xl">
-              <p 
+              <p
                 ref={textRef}
                 className="font-body font-medium text-[clamp(18px,2.5vw,28px)] text-black leading-[1.4] text-left tracking-tight flex flex-wrap"
               >
@@ -84,7 +99,7 @@ export const AboutEducation: React.FC = () => {
 
 const Letter = ({ children, progress, range }: { children: string; progress: any; range: [number, number] }) => {
   const opacity = useTransform(progress, range, [0.15, 1]);
-  
+
   return (
     <motion.span style={{ opacity }} className="text-black inline-block">
       {children}
