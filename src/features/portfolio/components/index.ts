@@ -1,9 +1,0 @@
-export { AboutEducation } from './about-education';
-export { ContactCTA } from './contact-cta';
-export { Footer } from './footer';
-export { Header } from './header';
-export { Hero } from './hero';
-export { PotentialSection } from './potential-section';
-export { ProjectGrid } from './project-grid';
-export { SkillsParallax } from './skills-parallax';
-export { SmoothScrollProvider } from './smooth-scroll-provider';
