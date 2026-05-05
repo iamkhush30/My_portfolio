@@ -11,152 +11,159 @@ const SECTIONS = [
   {
     title: "Global Cloud Orchestration",
     tagline: "Platform Pipeline",
-    description: "A multi-region cloud pipeline with automated rollback, zero-downtime deploys, and real-time observability across distributed services.",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80",
+    description:
+      "A multi-region cloud pipeline with automated rollback, zero-downtime deploys, and real-time observability across distributed services.",
+    image:
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80",
     accentColor: "#2563EB",
     href: "/work/global-cloud-orchestration",
   },
   {
     title: "Online Electronics Store",
     tagline: "E-Commerce",
-    description: "A high-conversion storefront designed with behavioral science principles — precision-crafted product flows, micro-interactions, and a performance-first architecture.",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=80",
+    description:
+      "A high-conversion storefront designed with behavioral science principles — precision-crafted product flows, micro-interactions, and a performance-first architecture.",
+    image:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=80",
     accentColor: "#7C3AED",
     href: "/work/online-electronics-store",
   },
   {
     title: "CI/CD Pipeline Analytics",
     tagline: "CI/CD Pipeline",
-    description: "A real-time dashboard visualizing pipeline health, deployment frequency, and failure rates — turning DevOps telemetry into actionable engineering insight.",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=2000&q=80",
+    description:
+      "A real-time dashboard visualizing pipeline health, deployment frequency, and failure rates — turning DevOps telemetry into actionable engineering insight.",
+    image:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=2000&q=80",
     accentColor: "#0891B2",
     href: "/work/cicd-pipeline-analytics",
   },
 ];
 
 export default function LayeredPanelReveal() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const stickyRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     const cards = cardsRef.current;
-    const total = SECTIONS.length;
+    const total = cards.length;
 
-    gsap.config({ force3D: true });
-
-    // Card 0 is on top. Cards below start offscreen (yPercent: 100).
     cards.forEach((card, i) => {
       gsap.set(card, {
         yPercent: i === 0 ? 0 : 100,
-        scale: 1,
-        zIndex: total - i,          // card 0 = highest z, sits on top
-        transformOrigin: "50% 0%",  // shrink from top so it feels "pushed back"
-        force3D: true,
+        zIndex: i,
       });
     });
 
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: stickyRef.current,
+        trigger: sectionRef.current,
         start: "top top",
-        end: `+=${(total - 1) * 100}vh`,
-        scrub: 0.5,
+        end: `+=${(total - 1) * window.innerHeight}`,
+        scrub: 0.6, 
         pin: true,
-        pinSpacing: true,       // ← this is critical: adds scroll height OUTSIDE the pin
         anticipatePin: 1,
-        invalidateOnRefresh: true,
       },
     });
 
-    // For each transition: next card slides up from bottom, current card scales back
     cards.forEach((_, i) => {
-      if (i === total - 1) return; // last card has nothing after it
-      tl.to(
-        cards[i + 1],
-        { yPercent: 0, ease: "power2.inOut", duration: 1 },
-        `step${i}`
-      ).to(
+      if (i === total - 1) return;
+
+      tl.set(cards[i + 1], { zIndex: total + i });
+
+      tl.to(cards[i + 1], {
+        yPercent: 0,
+        ease: "power3.inOut",
+      }).to(
         cards[i],
-        { scale: 0.9, ease: "power2.inOut", duration: 1 },
-        `step${i}`
+        {
+          scale: 0.92,
+          opacity: 0.85,
+        },
+        "<"
       );
     });
 
-    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+    ScrollTrigger.refresh();
 
     return () => {
-      cancelAnimationFrame(raf);
       ScrollTrigger.getAll().forEach((st) => st.kill());
-      tl.kill();
     };
   }, []);
 
-  // wrapperRef gives GSAP a clean block-level ancestor with no height constraints
   return (
-    <div ref={wrapperRef}>
-      <div
-        ref={stickyRef}
-        className="relative w-full overflow-hidden"
-        style={{ height: "100vh" }}
-      >
-        {SECTIONS.map((section, i) => (
-          <div
-            key={i}
-            ref={(el) => { if (el) cardsRef.current[i] = el; }}
-            className="absolute inset-0 flex items-center justify-center px-4 sm:px-6 lg:px-10"
-            style={{ willChange: "transform" }}
-          >
-            <Card section={section} index={i} />
-          </div>
-        ))}
+    <section
+      ref={sectionRef}
+      className="relative w-full"
+      style={{ height: "100vh" }}
+    >
+      {/* ✅ FIXED HEADER (NOT STICKY, JUST POSITIONED) */}
+      <div className="absolute top-0 left-0 w-full z-20 px-6 md:px-12 pt-8">
+        <div className="max-w-6xl mx-auto">
+          <span className="text-label text-primary">
+            Selected Archive
+          </span>
+          <h2 className="text-heading text-foreground mt-4">
+            My Vault
+          </h2>
+        </div>
       </div>
-    </div>
+
+      {/* ✅ CARDS */}
+      {SECTIONS.map((section, i) => (
+        <div
+          key={i}
+          ref={(el) => {
+            if (el) cardsRef.current[i] = el;
+          }}
+          className="absolute inset-0 flex items-start justify-center px-6 pt-[240px]"
+        >
+          <Card section={section} />
+        </div>
+      ))}
+    </section>
   );
 }
 
-function Card({
-  section,
-}: {
-  section: (typeof SECTIONS)[0];
-  index: number;
-}) {
+function Card({ section }: any) {
   return (
     <Link
       href={section.href}
-      className="relative w-full max-w-[min(90vw,1120px)] h-[clamp(280px,55vh,560px)] overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.10)] border border-slate-200 block group"
+      className="w-full max-w-[1100px] h-[clamp(420px,50vh,520px)] rounded-2xl bg-white shadow-xl overflow-hidden grid lg:grid-cols-[1.05fr_1fr]"
     >
-      <div className="relative grid h-full lg:grid-cols-[1.1fr_1fr]">
-        {/* Left: text */}
-        <div className="flex h-full flex-col justify-between gap-5 px-8 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
-          <div className="space-y-6">
-            <span className="text-label text-[#0F172A]/40 uppercase tracking-widest">
-              {section.tagline}
-            </span>
-            <h2 className="text-card-title text-[#0F172A] max-w-[15ch] leading-tight">
-              {section.title}
-            </h2>
-            <p className="max-w-md text-body text-[#64748B]">
-              {section.description}
-            </p>
-          </div>
-          <div className="space-y-4">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="capsule">Case Study</Badge>
-              <Badge variant="capsule">Live Preview</Badge>
-            </div>
-          </div>
-        </div>
+      <div className="p-8 lg:p-10 flex flex-col">
+        <span className="text-sm uppercase tracking-widest text-gray-400">
+          {section.tagline}
+        </span>
 
-        {/* Right: image */}
-        <div className="relative h-full min-h-[240px] overflow-hidden bg-slate-50 lg:border-l lg:border-slate-200">
+        <h2 className="mt-4 text-[clamp(30px,3.8vw,44px)] font-extrabold leading-tight text-slate-900">
+          {section.title}
+        </h2>
+
+        <p className="mt-6 text-gray-500 max-w-[560px]">
+          {section.description}
+        </p>
+
+        <div className="mt-auto flex items-center gap-3">
+          <Badge variant="capsule">CASE STUDY</Badge>
+          <Badge variant="capsule">LIVE PREVIEW</Badge>
+        </div>
+      </div>
+
+      <div className="relative">
+        <div className="absolute inset-0 w-full h-full">
           <img
             src={section.image}
-            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-            alt={section.title}
-            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover"
+            aria-hidden
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60" />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundColor: section.accentColor,
+              opacity: 0.18,
+            }}
+          />
         </div>
       </div>
     </Link>

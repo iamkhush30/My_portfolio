@@ -106,7 +106,7 @@ export const PotentialSection = () => {
             style={{
               transformOrigin: '50% 100%',
               transform: `translateX(-50%) rotate(${needleRotation}deg)`,
-              background: `conic-gradient(from -2deg at 50% 100%, transparent 0deg, rgba(37, 99, 235, 0.05) 2deg, transparent 4deg)`,
+              background: `conic-gradient(from -2deg at 50% 50%, transparent 0deg, rgba(37, 99, 235, 0.05) 2deg, transparent 4deg)`,
               maskImage: 'radial-gradient(circle at 50% 100%, black 0%, black 36%, transparent 37%)',
               WebkitMaskImage: 'radial-gradient(circle at 50% 100%, black 0%, black 36%, transparent 37%)',
             }}

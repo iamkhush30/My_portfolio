@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 /**
  * @fileOverview High-fidelity navigation bar with organic "liquid" concave curves.
- * Updated with Intro, My Lab, KM, My Vault, and Contact hierarchy.
+ * Updated with About, My Lab, KM, My Vault, and Contact hierarchy.
  * KM Logo targets #hero for smooth scroll to home from any page.
  */
 
@@ -18,6 +18,9 @@ export const Header = () => {
         window.__lenis.scrollTo(0);
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      if (window.location.hash) {
+        window.history.replaceState(null, '', '/');
       }
     }
   };
@@ -50,10 +53,10 @@ export const Header = () => {
               href="/#about" 
               className="text-[#94A3B8] text-nav hover:text-[#2563EB] transition-all duration-500 ease-out"
             >
-              Intro
+              About
             </Link>
             <Link 
-              href="/#skills" 
+              href="/#lab" 
               className="text-[#94A3B8] text-nav hover:text-[#2563EB] transition-all duration-500 ease-out"
             >
               My Lab
@@ -74,7 +77,7 @@ export const Header = () => {
           {/* Right Menu Items */}
           <div className="hidden md:flex items-center gap-10 flex-1 justify-start pl-12">
             <Link 
-              href="/#work" 
+              href="/#vault" 
               className="text-[#94A3B8] text-nav hover:text-[#2563EB] transition-all duration-500 ease-out"
             >
               My Vault

@@ -316,7 +316,7 @@ export const Hero = () => {
             <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
             <div className="hero-btns">
-              <a href="#work" className="hero-btn-primary text-button">View Archive →</a>
+              <a href="#vault" className="hero-btn-primary text-button">View Archive →</a>
             </div>
             <div className="hero-socials">
               <a href="https://linkedin.com/in/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
@@ -386,7 +386,7 @@ export const Hero = () => {
             <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
             <div className="hero-btns">
-              <a href="#work" className="hero-btn-primary text-button">View Archive →</a>
+              <a href="#vault" className="hero-btn-primary text-button">View Archive →</a>
             </div>
             <div className="hero-socials">
               <a href="https://linkedin.com/in/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">in</a>

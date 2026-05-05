@@ -41,7 +41,7 @@ export default function Home() {
         <AboutEducation />
 
         <section
-          id="capabilities"
+          id="lab"
           className="relative z-20 bg-[#F5F5F7] section-light overflow-visible snap-start snap-always"
         >
           <SkillsParallax />

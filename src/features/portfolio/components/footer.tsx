@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
-  { label: "Capabilities", href: "#capabilities" },
+  { label: "My Lab", href: "#lab" },
   { label: "Vault", href: "#vault" },
   { label: "Contact", href: "#contact" },
 ];
@@ -44,6 +44,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer
+      id="contact"
       className="relative bg-[var(--dark-bg)] border-t border-[var(--dark-border)] overflow-hidden"
       aria-label="Site footer"
     >
@@ -118,11 +119,11 @@ export const Footer: React.FC = () => {
   className="footer-box flex flex-col items-end justify-center"
   style={{ borderRight: "none", borderBottom: "none" }}
 >
-  <p className="text-label text-[var(--dark-text-muted)]">
+  <p className="text-nav text-[var(--dark-text-muted)]">
     {dayDate}
   </p>
-  <p className="text-label text-[var(--dark-text-muted)] mt-1">
-    {timeZoneLabel} · UTC +5:30
+  <p className="text-label text-[var(--dark-text-muted)] mt-1 opacity-70">
+    {timeZoneLabel}
   </p>
 </div>
       </div>

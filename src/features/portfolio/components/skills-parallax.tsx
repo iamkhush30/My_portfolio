@@ -179,7 +179,6 @@ export const SkillsParallax = () => {
 
   return (
     <div 
-      id="skills"
       ref={containerRef}
       className="relative z-10 py-[var(--space)]"
     >

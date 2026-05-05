@@ -166,78 +166,48 @@ const ProjectCard = ({
   );
 };
 
+// export const ProjectGrid = () => {
+//   const headerRef = useRef<HTMLDivElement>(null);
+//   const [headerVisible, setHeaderVisible] = useState(false);
+
+//   useEffect(() => {
+//     const observer = new IntersectionObserver(
+//       ([entry]) => {
+//         if (entry.isIntersecting) {
+//           setHeaderVisible(true);
+//           observer.unobserve(entry.target);
+//         }
+//       },
+//       { threshold: 0.3 }
+//     );
+
+//     if (headerRef.current) observer.observe(headerRef.current);
+
+//     return () => observer.disconnect();
+//   }, []);
+
+//   return (
+//     <div className="relative z-20 w-full bg-[#F5F5F7]">
+//       <div
+//         ref={headerRef}
+//         className={`px-6 md:px-12 pt-6 pb-4 transition-opacity duration-700 ${
+//           headerVisible ? "opacity-100" : "opacity-0"
+//         }`}
+//       >
+//         <div className="container mx-auto">
+//           <span className="text-label text-primary">Selected Archive</span>
+//           <h2 className="text-heading text-foreground mt-4">My Vault</h2>
+//         </div>
+//       </div>
+
+//       <LayeredPanelReveal />
+//     </div>
+//   );
+// };
 export const ProjectGrid = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const [headerVisible, setHeaderVisible] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    // FIX: heading triggers when it enters viewport — no rootMargin offset
-    // so it's guaranteed visible before the pinned section locks
-    const headerObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHeaderVisible(true);
-          headerObserver.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.3 }   // was 0.1 / -50px — now fires reliably when heading is clearly in view
-    );
-    if (headerRef.current) headerObserver.observe(headerRef.current);
-
-    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const startTrigger = rect.top - windowHeight;
-      const endTrigger = rect.bottom;
-      const totalRange = endTrigger - startTrigger;
-      const currentPos = -startTrigger;
-      const progress = Math.max(0, Math.min(1, currentPos / totalRange));
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-      headerObserver.disconnect();
-    };
-  }, []);
-
   return (
-    <div
-      id="work"
-      ref={sectionRef}
-      className="relative z-20 w-full bg-[#F5F5F7]"
-      style={{ height: "100vh", display: "flex", flexDirection: "column" }}
-    >
-      {/* Heading — fixed height, sits above cards */}
-      <div
-        ref={headerRef}
-        className={cn(
-  "relative z-20 bg-[#F5F5F7] px-6 md:px-12 pt-6 pb-4 flex-shrink-0",          "transition-opacity duration-700",
-          headerVisible ? "opacity-100" : "opacity-0"
-        )}
-      >
-        <div className="container mx-auto">
-          <span className="text-label text-primary">Selected Archive</span>
-          <h2 className="text-heading text-foreground mt-4">My Vault</h2>
-        </div>
-      </div>
-
-      {/* Cards fill remaining height */}
-      <div className="flex-1 min-h-0">
-        <LayeredPanelReveal />
-      </div>
-    </div>
+    <section id="vault" className="relative z-20 w-full bg-[#F5F5F7]">
+      <LayeredPanelReveal />
+    </section>
   );
-};
+};  

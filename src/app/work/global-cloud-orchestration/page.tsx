@@ -21,7 +21,7 @@ export default function GlobalCloudOrchestration() {
       <div className="relative z-10 pt-[var(--space)] pb-[var(--space)]">
         <div className="container-padding mx-auto">
           <nav className="flex items-center gap-2 mb-16 opacity-0 animate-entrance-fade-up">
-            <Link href="/#work" className="text-label text-primary hover:underline">
+            <Link href="/#vault" className="text-label text-primary hover:underline">
               My Vault
             </Link>
             <span className="text-label text-muted-foreground">/</span>
@@ -87,7 +87,7 @@ export default function GlobalCloudOrchestration() {
           </section>
 
           <div className="mt-6 pt-4 border-t border-border flex flex-col md:flex-row items-center justify-between gap-8">
-            <Link href="/#work" className="text-label text-muted-foreground flex items-center gap-2 group hover:text-foreground transition-colors uppercase">
+            <Link href="/#vault" className="text-label text-muted-foreground flex items-center gap-2 group hover:text-foreground transition-colors uppercase">
               <span className="text-lg transition-transform group-hover:-translate-x-1">←</span>
               <span>Back to Vault</span>
             </Link>
