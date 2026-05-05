@@ -9,7 +9,7 @@
  * - SuggestPortfolioNavigationElementsOutput - The return type for the suggestPortfolioNavigationElements function.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai} from '@/services/ai/genkit';
 import {z} from 'genkit';
 
 const StyleGuidelinesSchema = z.object({
@@ -47,71 +47,3 @@ const NavigationSuggestionSchema = z.object({
   contentIdeas: z.string().describe('Ideas for the content that should be included in this navigation section.'),
   styling: z.string().describe('Detailed CSS or style descriptions for the navigation item and its content, consistent with overall guidelines.'),
 });
-
-const SuggestPortfolioNavigationElementsOutputSchema = z.object({
-  suggestions: z.array(NavigationSuggestionSchema).describe('A list of suggestions for each requested navigation item.'),
-});
-export type SuggestPortfolioNavigationElementsOutput = z.infer<
-  typeof SuggestPortfolioNavigationElementsOutputSchema
->;
-
-export async function suggestPortfolioNavigationElements(
-  input: SuggestPortfolioNavigationElementsInput
-): Promise<SuggestPortfolioNavigationElementsOutput> {
-  return suggestPortfolioNavigationElementsFlow(input);
-}
-
-const prompt = ai.definePrompt({
-  name: 'suggestPortfolioNavigationElementsPrompt',
-  input: {schema: SuggestPortfolioNavigationElementsInputSchema},
-  output: {schema: SuggestPortfolioNavigationElementsOutputSchema},
-  prompt: `You are an AI-powered style advisor for a digital portfolio branded as 'KM'.
-Your task is to suggest placements, content ideas, and consistent styling for navigation elements.
-
-Use the provided hero section design, about section content, and comprehensive style guidelines to ensure all suggestions maintain a cohesive look and feel.
-
---- Existing Information ---
-
-Hero Section HTML/CSS:
-"""
-{{{heroSectionHtmlCss}}}
-"""
-
-About Section Content:
-"""
-{{{aboutSectionContent}}}
-"""
-
-Style Guidelines:
-Primary Color: {{{styleGuidelines.primaryColor}}}
-Background Color: {{{styleGuidelines.backgroundColor}}}
-Text Color: {{{styleGuidelines.textColor}}}
-Headline Font: {{{styleGuidelines.headlineFont}}}
-Body Font: {{{styleGuidelines.bodyFont}}}
-Layout Description: {{{styleGuidelines.layoutDescription}}}
-Iconography Description: {{{styleGuidelines.iconographyDescription}}}
-Animation Description: {{{styleGuidelines.animationDescription}}}
-
---- Task ---
-
-For each of the following navigation items, provide a suggested placement, content ideas, and detailed styling consistent with the provided information:
-
-{{#each navigationItems}}
-- {{{this}}}
-{{/each}}
-
-Ensure the styling suggestions are precise, mentioning specific CSS properties where applicable, and reflect the overall brand and design principles of 'KM'. Consider the responsiveness and user experience.
-`,
-});
-
-const suggestPortfolioNavigationElementsFlow = ai.defineFlow(
-  {
-    name: 'suggestPortfolioNavigationElementsFlow',
-    inputSchema: SuggestPortfolioNavigationElementsInputSchema,
-    outputSchema: SuggestPortfolioNavigationElementsOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);

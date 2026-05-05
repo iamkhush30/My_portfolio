@@ -1,11 +1,11 @@
-import { Header } from '@/features/portfolio/components/header';
-import { Hero } from '@/features/portfolio/components/hero';
-import { ProjectGrid } from '@/features/portfolio/components/project-grid';
-import { PotentialSection } from '@/features/portfolio/components/potential-section';
-import { AboutEducation } from '@/features/portfolio/components/about-education';
-import { SkillsParallax } from '@/features/portfolio/components/skills-parallax';
-import { ContactCTA } from '@/features/portfolio/components/contact-cta';
-import { Footer } from '@/features/portfolio/components/footer';
+import { Header } from '@/features/header';
+import { Hero } from '@/features/hero';
+import { ProjectGrid } from '@/features/project-grid';
+import { PotentialSection } from '@/features/potential-section';
+import { AboutEducation } from '@/features/about-education';
+import { SkillsParallax } from '@/features/skills-parallax';
+import { ContactCTA } from '@/features/contact-cta';
+import { Footer } from '@/features/footer';
 
 export default function Home() {
   return (

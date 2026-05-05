@@ -116,10 +116,8 @@ export const PotentialSection = () => {
             className="absolute bottom-0 left-1/2 -translate-x-1/2 origin-bottom w-[2px] h-full transition-transform duration-200 ease-out z-20 flex flex-col items-center"
             style={{ transform: `translateX(-50%) rotate(${needleRotation}deg)` }}
           >
-            {/* Needle line with gradient */}
             <div className="w-full h-full bg-gradient-to-t from-[#2563EB]/40 via-[#2563EB] to-[#2563EB] shadow-[0_0_12px_rgba(37,99,235,0.6)]"></div>
           </div>
-
 
         </div>
       </div>

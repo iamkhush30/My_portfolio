@@ -74,7 +74,6 @@ more considered.`;
                           </Letter>
                         );
                       })}
-                      {/* Manually increment for the space between words */}
                       {(() => { letterCount++; return null; })()}
                     </span>
                   );
@@ -85,7 +84,6 @@ more considered.`;
         </div>
       </div>
 
-      {/* Optional subtle grid */}
       <div
         className="absolute inset-0 pointer-events-none -z-10 opacity-[0.02]"
         style={{

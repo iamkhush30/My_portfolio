@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { SmoothScrollProvider } from '@/features/portfolio/components/smooth-scroll-provider';
+import { SmoothScrollProvider } from '@/features/smooth-scroll-provider';
 
 export const metadata: Metadata = {
   title: 'Khush Makwana | Hybrid Engineer & Designer',

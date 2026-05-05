@@ -3,10 +3,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PlaceHolderImages } from '@/app/lib/placeholder-images';
+import { PlaceHolderImages } from '@/shared/lib/placeholder-images';
 import { cn } from '@/shared/lib/utils';
 import { RippleButton } from '@/shared/ui/ripple-button';
-import LayeredPanelReveal from '@/features/portfolio/components/animations/cinematic-scroll';
+import LayeredPanelReveal from '@/features/cinematic-scroll/page';
 
 interface Project {
   id: string;
@@ -22,21 +22,21 @@ const projects: Project[] = [
     title: "Global Cloud Orchestration",
     imageId: "project-1",
     bgColor: "bg-white",
-    href: "/work/global-cloud-orchestration"
+    href: "/global-cloud-orchestration"
   },
   {
     id: "02",
     title: "Online Electronics Store",
     imageId: "project-2",
     bgColor: "bg-white",
-    href: "/work/online-electronics-store"
+    href: "/online-electronics-store"
   },
   {
     id: "03",
     title: "CI/CD Pipeline Analytics",
     imageId: "project-4",
     bgColor: "bg-white",
-    href: "/work/cicd-pipeline-analytics"
+    href: "/cicd-pipeline-analytics"
   }
 ];
 
