@@ -34,16 +34,15 @@ more considered.`;
     <section
       id="about"
       ref={containerRef}
-      className="relative z-20 h-screen flex items-start pt-[12vh] overflow-hidden bg-white border-t border-border shadow-[0_-40px_100px_-20px_rgba(15,23,42,0.1)]"
+      className="relative z-20 min-h-screen md:h-screen flex items-start pt-[9vh] sm:pt-[10vh] md:pt-[12vh] overflow-hidden bg-white border-t border-border shadow-[0_-40px_100px_-20px_rgba(15,23,42,0.1)]"
     >
-      <div className="container mx-auto px-6 md:px-12 py-[var(--space)]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-20 items-start w-full">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 py-[var(--space)]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 sm:gap-y-10 lg:gap-x-20 items-start w-full">
           <div className="lg:col-span-4 flex flex-col">
             <div className="flex flex-col">
               <h2 className="text-heading text-foreground tracking-tighter">About</h2>
-              <div className="w-16 h-1 bg-primary mt-6" />
             </div>
-            <div className="mt-16 lg:mt-24 flex flex-col gap-10">
+            <div className="mt-8 sm:mt-10 lg:mt-24 flex flex-col gap-8 sm:gap-10">
               <div className="flex flex-col gap-2">
                 <span className="text-label text-primary">CURRENT FOCUS</span>
                 <span className="text-body text-foreground leading-[1.45]">
@@ -59,7 +58,7 @@ more considered.`;
             <div className="max-w-4xl">
               <p
                 ref={textRef}
-                className="font-body font-medium text-[clamp(18px,2.5vw,28px)] text-black leading-[1.4] text-left tracking-tight flex flex-wrap"
+                className="font-body font-medium text-[clamp(16px,4.5vw,28px)] text-black leading-[1.4] text-left tracking-tight flex flex-wrap max-w-none sm:max-w-5xl"
               >
                 {words.map((word, wordIndex) => {
                   return (

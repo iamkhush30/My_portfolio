@@ -326,14 +326,14 @@ export default function CicdPipelineAnalytics() {
 								<div className="w-16 h-1 bg-white/10"></div>
 							</div>
 
-							<div className="border border-white/10 rounded-xl overflow-hidden bg-transparent">
-								<div className="grid grid-cols-1 md:grid-cols-[160px_1fr_1fr] bg-white/5 border-b border-white/10 p-3 items-center">
+							<div className="w-full max-w-none border border-white/10 rounded-xl overflow-hidden bg-transparent">
+									<div className="grid grid-cols-1 md:grid-cols-[260px_minmax(0,1.35fr)_minmax(0,1fr)] bg-white/5 border-b border-white/10 p-3 items-center">
 									<span className="text-[10px] font-mono tracking-[0.14em] uppercase text-white/40 md:border-r md:border-white/10 h-full flex items-center pr-4">Stage</span>
 									<span className="text-[10px] font-mono tracking-[0.14em] uppercase text-white/40 md:border-r md:border-white/10 h-full flex items-center px-4">Action</span>
 									<span className="text-[10px] font-mono tracking-[0.14em] uppercase text-white/40 h-full flex items-center pl-4">Command / Detail</span>
 								</div>
 								{breakdown.map((row, i) => (
-									<div key={i} className="grid grid-cols-1 md:grid-cols-[160px_1fr_1fr] border-b border-white/10 last:border-none transition-colors hover:bg-white/[0.02]">
+									<div key={i} className="grid grid-cols-1 md:grid-cols-[260px_minmax(0,1.35fr)_minmax(0,1fr)] border-b border-white/10 last:border-none transition-colors hover:bg-white/[0.02]">
 										<div className="p-3 md:border-r md:border-white/10 flex items-center">
 											<span className="text-label text-primary">{row.stage}</span>
 										</div>

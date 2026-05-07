@@ -8,7 +8,7 @@ export const ContactCTA = () => {
   return (
     <a
       href="mailto:khushmakwana1980@gmail.com"
-      className="group relative z-20 flex flex-col items-center justify-center transition-all duration-700 px-6 w-full gap-3 bg-secondary border-t border-border !py-4 section-light snap-start snap-always overflow-hidden"
+      className="group relative z-20 flex flex-col items-center justify-center transition-all duration-700 px-4 sm:px-6 w-full gap-3 bg-secondary border-t border-border py-7 sm:!py-4 section-light snap-start snap-always overflow-hidden"
     >
       {/* Background Hover Effect */}
       <div className="absolute inset-0 bg-primary/5 scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-in-out origin-left -z-10"></div>
@@ -19,7 +19,7 @@ export const ContactCTA = () => {
       </span>
 
       {/* Main Narrative Heading & Icon - Merged into a single horizontal block for flat DOM */}
-      <h2 className="text-heading text-foreground group-hover:text-primary transition-colors duration-500 text-center flex items-center justify-center gap-3 md:gap-6 max-w-[1400px]">
+      <h2 className="text-heading text-foreground group-hover:text-primary transition-colors duration-500 text-center flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-6 max-w-[1400px] leading-tight px-2 sm:px-0">
         Let's Cook Up Conversation
 
         {/* Interactive Icon Component - Now a direct child of h2 to avoid parent div wrappers */}

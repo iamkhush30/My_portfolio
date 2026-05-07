@@ -32,9 +32,9 @@
     },
     {
       "id": "project-4",
-      "description": "Global cloud orchestration architecture. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
-      "imageUrl": "https://picsum.photos/seed/project4/1000/700",
-      "imageHint": "cloud computing server"
+      "description": "CI/CD pipeline breakdown visual. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "/assets/CICD-Pipeline.png",
+      "imageHint": "ci cd pipeline"
     },
     {
       "id": "project-5",

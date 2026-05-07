@@ -99,6 +99,11 @@
     @apply bg-background text-[#171717] font-body antialiased;
   }
 
+  button:not(:disabled),
+  a {
+    cursor: pointer;
+  }
+
   section {
     padding-top: var(--space);
     padding-bottom: 0;
@@ -146,12 +151,12 @@
 
   .text-body {
     @apply font-body font-normal leading-[1.75] text-secondary-foreground;
-    font-size: 18px;
+    font-size: clamp(16px, 2.1vw, 16px);
   }
 
   .text-label {
     @apply font-mono font-medium uppercase tracking-[0.14em];
-    font-size: 14px;
+    font-size: clamp(11px, 1.6vw, 14px);
   }
 
   .text-nav {
@@ -160,8 +165,8 @@
   }
 
   .text-button {
-    @apply font-body font-medium tracking-wide uppercase;
-    font-size: 14px;
+    @apply font-heading font-medium tracking-wide uppercase;
+    font-size: clamp(12px, 1.8vw, 14px);
   }
 
   .text-tagline {
@@ -171,7 +176,7 @@
 
   .text-quote {
     @apply font-body font-light italic leading-relaxed;
-    font-size: 15px;
+    font-size: clamp(13px, 1.8vw, 15px);
   }
 
   /* ── Spacing Utilities ── */
@@ -214,6 +219,108 @@
     will-change: transform, opacity;
     transition: transform var(--duration-slow) var(--ease-out-expo),
                 opacity var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .header-nav-shape {
+    clip-path: none;
+  }
+
+  /* Mobile menu bubble floating + goo effect */
+  .mobile-menu-bubble {
+    will-change: transform, opacity;
+    overflow: hidden;
+  }
+
+  /* ensure bubbles don't overlap by keeping them above the background and allowing pointer events
+     Each bubble is centered using translate(-50%,-50%) in the inline styles */
+  .mobile-menu-bubble {
+    z-index: 10;
+    pointer-events: auto;
+    border-radius: 9999px;
+  }
+
+  /* ensure text is readable on colored bubbles */
+  .mobile-menu-bubble .text-label {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* Side panel styles for mobile navigation */
+  .side-panel {
+    background: linear-gradient(180deg, rgba(10,15,30,0.96), rgba(8,12,22,0.96));
+    border-left: 1px solid rgba(255,255,255,0.03);
+    backdrop-filter: blur(6px) saturate(120%);
+    -webkit-backdrop-filter: blur(6px) saturate(120%);
+  }
+
+  .side-menu-item {
+    background: transparent;
+    color: white;
+    font-weight: 600;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    transition: transform 160ms var(--ease-smooth), background 160ms var(--ease-smooth);
+  }
+
+  .side-menu-item:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-2px);
+  }
+
+  .mobile-overlay {
+    will-change: opacity, backdrop-filter;
+    transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 700ms cubic-bezier(0.16, 1, 0.3, 1), -webkit-backdrop-filter 700ms cubic-bezier(0.16, 1, 0.3, 1), background 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-menu-bubble .bubble-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation-name: floatAround;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  @keyframes floatAround {
+    0% { transform: translate(0px, 0px); }
+    100% { transform: translate(var(--float-x, 6px), var(--float-y, -6px)); }
+  }
+
+}
+
+@media (max-width: 640px) {
+  :root {
+    --space: 24px;
+    --container-px: 1rem;
+  }
+
+  section {
+    padding-top: 24px;
+  }
+
+  .text-display {
+    font-size: clamp(30px, 11vw, 64px);
+  }
+
+  .text-heading {
+    font-size: clamp(24px, 8vw, 48px);
+  }
+
+  .text-card-title {
+    font-size: clamp(18px, 6vw, 32px);
+  }
+
+  .footer-box {
+    padding: var(--space-lg) var(--space-md);
+  }
+}
+
+@media (min-width: 768px) {
+  .header-nav-shape {
+    clip-path: polygon(0% 0%, 100% 0%, 92% 100%, 8% 100%);
   }
 }
 

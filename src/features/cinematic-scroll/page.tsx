@@ -16,7 +16,6 @@ const SECTIONS = [
             "A multi-region cloud pipeline with automated rollback, zero-downtime deploys, and real-time observability across distributed services.",
         image:
             "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80",
-        accentColor: "#2563EB",
         href: "/global-cloud-orchestration",
     },
     {
@@ -25,8 +24,7 @@ const SECTIONS = [
         description:
             "A high-conversion storefront designed with behavioral science principles — precision-crafted product flows, micro-interactions, and a performance-first architecture.",
         image:
-            "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=80",
-        accentColor: "#7C3AED",
+            "/assets/Electronic-Store.png",
         href: "/online-electronics-store",
     },
     {
@@ -34,9 +32,7 @@ const SECTIONS = [
         tagline: "CI/CD Pipeline",
         description:
             "A real-time dashboard visualizing pipeline health, deployment frequency, and failure rates — turning DevOps telemetry into actionable engineering insight.",
-        image:
-            "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=2000&q=80",
-        accentColor: "#0891B2",
+        image: "/assets/CICD-Pipeline.png",
         href: "/cicd-pipeline-analytics",
     },
 ];
@@ -111,7 +107,7 @@ export default function LayeredPanelReveal() {
                     ref={(el) => {
                         if (el) cardsRef.current[i] = el;
                     }}
-                    className="absolute inset-0 flex items-start justify-center px-6 pt-[240px]"
+                    className="absolute inset-0 flex items-start justify-center px-6 pt-[220px]"
                 >
                     <Card section={section} />
                 </div>
@@ -124,7 +120,7 @@ function Card({ section }: any) {
     return (
         <Link
             href={section.href}
-            className="w-full max-w-[1100px] h-[clamp(420px,50vh,520px)] rounded-2xl bg-white shadow-xl overflow-hidden grid lg:grid-cols-[1.05fr_1fr]"
+            className="w-full max-w-[1100px] h-[clamp(200px,60vh,520px)] md:h-[clamp(440px,55vh,520px)] rounded-2xl bg-white shadow-xl overflow-hidden grid lg:grid-cols-[1.05fr_1fr]"
         >
             <div className="p-8 lg:p-10 flex flex-col">
                 <span className="text-sm uppercase tracking-widest text-gray-400">
@@ -149,13 +145,6 @@ function Card({ section }: any) {
                         src={section.image}
                         className="absolute inset-0 w-full h-full object-cover"
                         aria-hidden
-                    />
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            backgroundColor: section.accentColor,
-                            opacity: 0.18,
-                        }}
                     />
                 </div>
             </div>

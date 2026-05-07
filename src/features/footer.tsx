@@ -7,14 +7,14 @@ const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "My Lab", href: "#lab" },
   { label: "Vault", href: "#vault" },
-  { label: "Contact", href: "#contact" },
+  { label: "Resume", href: "/resume" },
 ];
 
 const SOCIAL_LINKS = [
-  { label: "GitHub", href: "https://github.com" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "Mail", href: "mailto:hello@khushmakwana.com" },
+  { label: "GitHub", href: "https://github.com/iamkhush30" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/khush30" },
+  { label: "Instagram", href: "https://www.instagram.com/iamkhush.30?igsh=aHkxYmN6d3dkcTNt" },
+  { label: "Mail", href: "mailto:khushmakwana1980@gmail.com" },
 ];
 
 export const Footer: React.FC = () => {
@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
         style={{ borderBottom: "1px solid var(--footer-line)" }}
       >
         {/* Col 1 — Brand */}
-        <div className="footer-box min-h-[240px] md:min-h-[320px]">
+        <div className="footer-box min-h-[180px] md:min-h-[320px] px-[var(--space-md)] py-[var(--space-lg)] sm:px-[var(--space-lg)] sm:py-[var(--space-xl)]">
           <p className="text-heading text-[var(--dark-text)]">
             Let's Connect
           </p>
@@ -65,7 +65,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Col 2 — Navigation */}
-        <div className="footer-box min-h-[240px] md:min-h-[320px]">
+        <div className="footer-box min-h-[180px] md:min-h-[320px] px-[var(--space-md)] py-[var(--space-lg)] sm:px-[var(--space-lg)] sm:py-[var(--space-xl)]">
           <p className="text-label text-[var(--dark-text-muted)] mb-[var(--space-lg)]">
             Navigation
           </p>
@@ -85,7 +85,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Col 3 — Connect */}
-        <div className="footer-box min-h-[240px] md:min-h-[320px]" style={{ borderRight: "none" }}>
+        <div className="footer-box min-h-[180px] md:min-h-[320px] px-[var(--space-md)] py-[var(--space-lg)] sm:px-[var(--space-lg)] sm:py-[var(--space-xl)]" style={{ borderRight: "none" }}>
           <p className="text-label text-[var(--dark-text-muted)] mb-[var(--space-lg)]">
             Connect
           </p>
@@ -110,13 +110,13 @@ export const Footer: React.FC = () => {
 
       {/* ── Bottom Bar ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-        <div className="footer-box" style={{ borderBottom: "none" }}>
+        <div className="footer-box px-[var(--space-md)] py-[var(--space-lg)] sm:px-[var(--space-lg)] sm:py-[var(--space-xl)]" style={{ borderBottom: "none" }}>
           <p className="text-label text-[var(--dark-text-muted)]">
             © {year} Khush Makwana
           </p>
         </div>
        <div
-  className="footer-box flex flex-col items-end justify-center"
+  className="footer-box flex flex-col items-start md:items-end justify-center gap-1 md:gap-0 px-[var(--space-md)] py-[var(--space-lg)] sm:px-[var(--space-lg)] sm:py-[var(--space-xl)]"
   style={{ borderRight: "none", borderBottom: "none" }}
 >
   <p className="text-nav text-[var(--dark-text-muted)]">

@@ -126,7 +126,7 @@ const ProjectCard = ({
           >
             <div
               className={cn(
-                "relative w-full aspect-[4/5] md:aspect-[3/4] overflow-hidden rounded-none flex flex-col p-8 md:p-10 border border-border transition-all duration-300 ease-out hover:border-primary/50",
+                "relative w-full aspect-square md:aspect-square overflow-hidden rounded-none flex flex-col p-8 md:p-10 border border-border transition-all duration-300 ease-out hover:border-primary/50",
                 project.bgColor
               )}
               style={{ transform: 'translateZ(0)' }}
@@ -168,7 +168,7 @@ const ProjectCard = ({
 
 export const ProjectGrid = () => {
   return (
-    <section id="vault" className="relative z-20 w-full bg-[#F5F5F7]">
+    <section id="vault" className="relative z-20 w-full bg-[#F5F5F7] overflow-hidden">
       <LayeredPanelReveal />
     </section>
   );

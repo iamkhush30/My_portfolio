@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Linkedin, Github, Instagram, Mail } from "lucide-react";
+import { RippleButton } from "@/shared/ui/ripple-button";
 import "./hero.css";
 
 /* ─── CMD lines ─── */
@@ -114,6 +115,37 @@ export const Hero = () => {
 
   const easeSmooth = (t: number) => 0.5 - 0.5 * Math.cos(Math.PI * t);
 
+  // Time-curve easing for slider reveal: easeOutCubic gives a natural deceleration
+  const easeTimeCurve = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  // Create a cubic-bezier easing function compatible with CSS cubic-bezier(x1,y1,x2,y2)
+  const cubicBezierEasing = (x1: number, y1: number, x2: number, y2: number) => {
+    const bezierX = (t: number) => {
+      const inv = 1 - t;
+      return 3 * inv * inv * t * x1 + 3 * inv * t * t * x2 + t * t * t;
+    };
+    const bezierY = (t: number) => {
+      const inv = 1 - t;
+      return 3 * inv * inv * t * y1 + 3 * inv * t * t * y2 + t * t * t;
+    };
+
+    // For a given x in [0,1], find t so that bezierX(t) ~= x, then return bezierY(t)
+    return (x: number) => {
+      // binary search for t
+      let lo = 0, hi = 1, mid = 0;
+      for (let i = 0; i < 24; i++) {
+        mid = (lo + hi) / 2;
+        const xMid = bezierX(mid);
+        if (Math.abs(xMid - x) < 1e-6) break;
+        if (xMid < x) lo = mid; else hi = mid;
+      }
+      return bezierY(mid);
+    };
+  };
+
+  // Use the same cubic-bezier curve used by the heading fadeInUp animation
+  const easeHeadingReveal = cubicBezierEasing(0.34, 1.56, 0.64, 1);
+
   const animateTo = useCallback(
     (to: number, duration: number, ease: (t: number) => number) =>
       new Promise<boolean>((resolve) => {
@@ -163,38 +195,94 @@ export const Hero = () => {
   }, [applyPct, resumeLenis]);
 
   useEffect(() => {
-    applyPct(introStartPct);
-    (async () => {
-      await new Promise((r) => setTimeout(r, 1000));
-      await new Promise((r) => setTimeout(r, introHoldMs));
+    // Start colorless (wire front visible) and automatically reveal
+    // after the page has fully loaded and fonts/images have been painted.
+    applyPct(0);
 
-      const start = introStartPct;
-      const a1 = introAmplitude;
-      const t1 = start - a1;
-      const t2 = t1 + a1 / 4;
-      const t3 = t2 - a1 / 8;
-      const t4 = t3 + a1 / 16;
+    let cancelled = false;
 
-      const baseDur = 900;
-      const d1 = Math.abs(t1 - start);
-      const durations = [
-        baseDur,
-        Math.max(220, Math.round(baseDur * (Math.abs(t2 - t1) / d1))),
-        Math.max(220, Math.round(baseDur * (Math.abs(t3 - t2) / d1))),
-        Math.max(220, Math.round(baseDur * (Math.abs(t4 - t3) / d1))),
-      ];
+    const runAfterLoad = async () => {
+      const target = 75;
+      const duration = 900;
 
-      if (await animateTo(t1, durations[0], easeSmooth)) {
-        if (await animateTo(t2, durations[1], easeSmooth)) {
-          if (await animateTo(t3, durations[2], easeSmooth)) {
-            if (await animateTo(t4, durations[3], easeSmooth)) {
-              setCmdActive(true);
-            }
-          }
-        }
+      // Wait for full page load if not already complete
+      if (document.readyState !== 'complete') {
+        await new Promise<void>((res) => window.addEventListener('load', () => res(), { once: true }));
       }
-    })();
-    return () => cancelAnimationFrame(introRaf.current);
+
+        // Wait for fonts to be ready (if supported) so text paints before animation
+        try { if ((document as any).fonts && (document as any).fonts.ready) await (document as any).fonts.ready; } catch {}
+
+        // Give the browser two frames to paint all details
+        await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+        if (cancelled) return;
+
+        // Wait for hero detail animations to finish before revealing slider.
+        const animatedSelectors = ['.hero-name', '.hero-left > p.text-label', '.hero-tags', '.hero-tagline', '.hero-text-wrapper', '.hero-availability', '.hero-btns', '.hero-socials', '.hero-terminal'];
+        const elements: Element[] = [];
+        for (const sel of animatedSelectors) elements.push(...Array.from(document.querySelectorAll(sel)));
+
+        const waitForAnimations = (els: Element[]) => Promise.all(
+          els.map((el) => new Promise<void>((res) => {
+            try {
+              const anims = (el as any).getAnimations ? (el as any).getAnimations() : [];
+              if (!anims || anims.length === 0) {
+                const cs = getComputedStyle(el as Element);
+                if (cs && cs.animationName === 'none') return res();
+              }
+
+              // If all animations already finished, resolve immediately
+              if (anims.length > 0 && anims.every((a: any) => a.playState === 'finished')) return res();
+
+              // Otherwise attach finish handlers with a timeout fallback
+              let finished = false;
+              const onFinish = () => {
+                if (finished) return;
+                const now = (el as any).getAnimations ? (el as any).getAnimations() : [];
+                if (now.length === 0 || now.every((a: any) => a.playState === 'finished')) {
+                  finished = true;
+                  cleanup();
+                  res();
+                }
+              };
+
+              const handlers: any[] = [];
+              for (const a of anims) {
+                if (a.finished || a.playState === 'finished') continue;
+                a.onfinish = onFinish;
+                handlers.push(a);
+              }
+
+              const fallback = setTimeout(() => { if (!finished) { finished = true; cleanup(); res(); } }, 2500);
+              function cleanup() { for (const h of handlers) h.onfinish = null; clearTimeout(fallback); }
+
+              // In case there were no handlers attached (animations already finished), resolve
+              if (handlers.length === 0) { cleanup(); res(); }
+            } catch (e) {
+              // If anything goes wrong, don't block — resolve
+              res();
+            }
+          }))
+        );
+
+        try { await waitForAnimations(elements); } catch {}
+        if (cancelled) return;
+
+        // Add delay before slider animation
+        await new Promise((res) => setTimeout(res, 1000));
+        if (cancelled) return;
+
+        await animateTo(target, duration, easeHeadingReveal);
+        if (cancelled) return;
+        setCmdActive(true);
+    };
+
+    runAfterLoad();
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(introRaf.current);
+    };
   }, [animateTo, applyPct]);
 
   const startDrag = useCallback(
@@ -233,16 +321,24 @@ export const Hero = () => {
             <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
             <div className="hero-btns">
-              <a href="#vault" className="hero-btn-primary text-button">View Archive →</a>
+              <RippleButton asChild className="hero-btn-primary text-button">
+                <a href="#vault" aria-label="View Archive">
+                  View Archive
+                  <svg className="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M13 5l6 7-6 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </RippleButton>
             </div>
             <div className="hero-socials">
-              <a href="https://linkedin.com/in/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
+              <a href="https://linkedin.com/in/khush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
                 <Linkedin size={18} />
               </a>
               <a href="https://github.com/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
                 <Github size={18} />
               </a>
-              <a href="https://instagram.com/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
+              <a href="https://www.instagram.com/iamkhush.30?igsh=aHkxYmN6d3dkcTNt" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
                 <Instagram size={18} />
               </a>
               <a href="mailto:khushmakwana1980@gmail.com" className="hero-social-icon">
@@ -302,12 +398,20 @@ export const Hero = () => {
             <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
             <div className="hero-btns">
-              <a href="#vault" className="hero-btn-primary text-button">View Archive →</a>
+              <RippleButton asChild className="hero-btn-primary text-button">
+                <a href="#vault" aria-label="View Archive">
+                  View Archive
+                  <svg className="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M13 5l6 7-6 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              </RippleButton>
             </div>
             <div className="hero-socials">
-              <a href="https://linkedin.com/in/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">in</a>
+              <a href="https://linkedin.com/in/khush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">in</a>
               <a href="https://github.com/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">gh</a>
-              <a href="https://instagram.com/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">ig</a>
+              <a href="https://www.instagram.com/iamkhush.30?igsh=aHkxYmN6d3dkcTNt" target="_blank" rel="noopener noreferrer" className="hero-social-icon">ig</a>
               <a href="mailto:khushmakwana1980@gmail.com" className="hero-social-icon">@</a>
             </div>
           </div>
