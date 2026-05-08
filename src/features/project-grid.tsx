@@ -19,24 +19,24 @@ interface Project {
 const projects: Project[] = [
   {
     id: "01",
-    title: "Global Cloud Orchestration",
-    imageId: "project-1",
-    bgColor: "bg-white",
-    href: "/global-cloud-orchestration"
-  },
-  {
-    id: "02",
-    title: "Online Electronics Store",
-    imageId: "project-2",
-    bgColor: "bg-white",
-    href: "/online-electronics-store"
-  },
-  {
-    id: "03",
     title: "CI/CD Pipeline Analytics",
     imageId: "project-4",
     bgColor: "bg-white",
     href: "/cicd-pipeline-analytics"
+  },
+  {
+    id: "02",
+    title: "Preed · Financial Intelligence",
+    imageId: "preed",
+    bgColor: "bg-white",
+    href: "/preed-financial-intelligence"
+  },
+  {
+    id: "03",
+    title: "Online Electronics Store",
+    imageId: "project-2",
+    bgColor: "bg-white",
+    href: "/online-electronics-store"
   }
 ];
 

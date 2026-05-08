@@ -76,10 +76,12 @@ export const PotentialSection = () => {
             </p>
 
             <div className="flex items-center justify-center w-full">
-              <RippleButton className="pill-btn group h-7 sm:h-10 md:h-12 lg:h-14 w-fit max-w-[160px] sm:max-w-none px-3 sm:px-6 md:px-8 lg:px-10 rounded-[45px] border-2 border-[#333] bg-[#111] cursor-pointer overflow-hidden outline-none flex items-center justify-center gap-1.5 sm:gap-3 md:gap-4 transition-all duration-200">
-                <span className="whitespace-nowrap text-[#F5F5F7] text-[clamp(11px,3.5vw,12px)] sm:text-button">Resume</span>
-                <ArrowRight className="text-white w-2.5 h-2.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </RippleButton>
+              <a href="https://drive.google.com/file/d/1pqPYaXpDMb6EdXkdv2L1MqRiu7SQTct-/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+                <RippleButton className="pill-btn group h-7 sm:h-10 md:h-12 lg:h-14 w-fit max-w-[160px] sm:max-w-none px-3 sm:px-6 md:px-8 lg:px-10 rounded-[45px] border-2 border-[#333] bg-[#111] cursor-pointer overflow-hidden outline-none flex items-center justify-center gap-1.5 sm:gap-3 md:gap-4 transition-all duration-200">
+                  <span className="whitespace-nowrap text-[#F5F5F7] text-[clamp(11px,3.5vw,12px)] sm:text-button">Resume</span>
+                  <ArrowRight className="text-white w-2.5 h-2.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </RippleButton>
+              </a>
             </div>
           </div>
 

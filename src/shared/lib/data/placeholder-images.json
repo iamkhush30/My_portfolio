@@ -37,6 +37,12 @@
       "imageHint": "ci cd pipeline"
     },
     {
+      "id": "preed",
+      "description": "Preed — Financial Intelligence app screenshot. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "/assets/preed.png",
+      "imageHint": "preed financial intelligence screenshot"
+    },
+    {
       "id": "project-5",
       "description": "Next-gen glassmorphism interface design. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
       "imageUrl": "https://picsum.photos/seed/project5/1000/700",

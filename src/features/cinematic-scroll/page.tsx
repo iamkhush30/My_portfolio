@@ -10,13 +10,21 @@ gsap.registerPlugin(ScrollTrigger);
 
 const SECTIONS = [
     {
-        title: "Global Cloud Orchestration",
-        tagline: "Platform Pipeline",
+        title: "CI/CD Pipeline Analytics",
+        tagline: "CI/CD Pipeline",
         description:
-            "A multi-region cloud pipeline with automated rollback, zero-downtime deploys, and real-time observability across distributed services.",
+            "A real-time dashboard visualizing pipeline health, deployment frequency, and failure rates — turning DevOps telemetry into actionable engineering insight.",
+        image: "/assets/CICD-Pipeline.png",
+        href: "/cicd-pipeline-analytics",
+    },
+    {
+        title: "Preed · Financial Intelligence",
+        tagline: "UI/UX Case Study",
+        description:
+            "A full-featured AI-powered stock prediction web application — combining algorithmic signal analysis, portfolio tracking, and multi-stock comparison into a single, data-dense dashboard for retail investors.",
         image:
-            "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80",
-        href: "/global-cloud-orchestration",
+            "/assets/preed.png",
+        href: "/preed-financial-intelligence",
     },
     {
         title: "Online Electronics Store",
@@ -26,14 +34,6 @@ const SECTIONS = [
         image:
             "/assets/Electronic-Store.png",
         href: "/online-electronics-store",
-    },
-    {
-        title: "CI/CD Pipeline Analytics",
-        tagline: "CI/CD Pipeline",
-        description:
-            "A real-time dashboard visualizing pipeline health, deployment frequency, and failure rates — turning DevOps telemetry into actionable engineering insight.",
-        image: "/assets/CICD-Pipeline.png",
-        href: "/cicd-pipeline-analytics",
     },
 ];
 

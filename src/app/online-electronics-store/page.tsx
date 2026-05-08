@@ -91,7 +91,7 @@ export default function OnlineElectronicsStore() {
 		<main className="relative min-h-screen bg-background overflow-x-hidden">
 			<Header />
 
-			<div className="relative z-10 pt-[var(--space)] pb-[var(--space)]">
+			<div className="relative z-10 pt-[var(--space)] pb-[var(--space)] animate-fade-in" style={{ animationDuration: '1.5s' }}>
 				<div className="container-padding mx-auto">
 
 					<nav className="flex items-center gap-2 mb-16 opacity-0 animate-entrance-fade-up">
@@ -320,7 +320,7 @@ export default function OnlineElectronicsStore() {
 					<div className="mt-6 pt-4 border-t border-border flex flex-col md:flex-row items-center justify-between gap-8">
 						<Link
 							href="/#vault"
-							className="text-label text-secondary-foreground flex items-center gap-3 group hover:text-primary transition-colors uppercase"
+							className="text-label text-muted-foreground flex items-center gap-2 group hover:text-foreground transition-colors uppercase"
 						>
 							<span className="text-lg transition-transform group-hover:-translate-x-1">←</span>
 							<span>Back to Vault</span>
@@ -330,8 +330,8 @@ export default function OnlineElectronicsStore() {
 							Online Electronics Store · UI/UX · 2024
 						</div>
 					</div>
-
 				</div>
+
 			</div>
 
 			<Footer />

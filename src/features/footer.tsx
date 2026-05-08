@@ -7,7 +7,7 @@ const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "My Lab", href: "#lab" },
   { label: "Vault", href: "#vault" },
-  { label: "Resume", href: "/resume" },
+  { label: "Resume", href: "https://drive.google.com/file/d/1pqPYaXpDMb6EdXkdv2L1MqRiu7SQTct-/view?usp=sharing", external: true },
 ];
 
 const SOCIAL_LINKS = [
@@ -72,14 +72,27 @@ export const Footer: React.FC = () => {
           <nav className="flex flex-col gap-[var(--space-md)]"
 >
             {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="text-nav text-[var(--dark-text)] opacity-70 hover:opacity-100 hover:text-[hsl(var(--primary))] transition-all duration-[var(--duration-fast)] w-fit relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 hover:after:w-full after:bg-[hsl(var(--primary))] after:transition-all after:duration-[var(--duration-base)] group flex items-center justify-between gap-2"
-              >
-                <span>{link.label}</span>
-                <span className="arrow-icon transition-transform duration-[var(--duration-base)] group-hover:rotate-45 inline-block">↗</span>
-              </Link>
+              link.external ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-nav text-[var(--dark-text)] opacity-70 hover:opacity-100 hover:text-[hsl(var(--primary))] transition-all duration-[var(--duration-fast)] w-fit relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 hover:after:w-full after:bg-[hsl(var(--primary))] after:transition-all after:duration-[var(--duration-base)] group flex items-center justify-between gap-2"
+                >
+                  <span>{link.label}</span>
+                  <span className="arrow-icon transition-transform duration-[var(--duration-base)] group-hover:rotate-45 inline-block">↗</span>
+                </a>
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="text-nav text-[var(--dark-text)] opacity-70 hover:opacity-100 hover:text-[hsl(var(--primary))] transition-all duration-[var(--duration-fast)] w-fit relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 hover:after:w-full after:bg-[hsl(var(--primary))] after:transition-all after:duration-[var(--duration-base)] group flex items-center justify-between gap-2"
+                >
+                  <span>{link.label}</span>
+                  <span className="arrow-icon transition-transform duration-[var(--duration-base)] group-hover:rotate-45 inline-block">↗</span>
+                </Link>
+              )
             ))}
           </nav>
         </div>
