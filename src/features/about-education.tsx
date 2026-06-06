@@ -11,7 +11,7 @@ export const AboutEducation: React.FC = () => {
 across DevOps engineering and UI/UX design. I've built 
 CI/CD pipelines using GitLab, Jenkins, Docker, and Kubernetes, 
 taking projects from code commit to containerized deployment 
-without manual steps. On the design side, I've designed 50+ 
+without manual steps. On the design side, I've designed 100+ 
 screens for a different projects, created visual content 
 that contributed to significant engagement growth for a 
 financial services client, and guided university students 

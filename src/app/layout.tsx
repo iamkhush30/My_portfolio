@@ -5,6 +5,9 @@ import { SmoothScrollProvider } from '@/features/smooth-scroll-provider';
 export const metadata: Metadata = {
   title: 'Khush Makwana | Hybrid Engineer & Designer',
   description: 'Portfolio of Khush Makwana, a hybrid engineer specializing in DevOps infrastructure and human-centered UI/UX design. Architecting logic into art.',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
