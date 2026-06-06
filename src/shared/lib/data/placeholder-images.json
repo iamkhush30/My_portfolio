@@ -20,9 +20,9 @@
     },
     {
       "id": "project-2",
-      "description": "High-end design system and user interface. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
-      "imageUrl": "https://picsum.photos/seed/project2/1000/700",
-      "imageHint": "minimalist design system"
+      "description": "Online Electronics Store e-commerce app. Recommended size: 1200x1600 (3:4 aspect ratio).",
+      "imageUrl": "/assets/Electronic-Store.png",
+      "imageHint": "e-commerce electronics store"
     },
     {
       "id": "project-3",

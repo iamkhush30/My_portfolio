@@ -1,11 +1,13 @@
 "use client";
- 
+
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/features/header';
 import { Footer } from '@/features/footer';
 import { Badge } from '@/shared/ui/badge';
 import { cn } from '@/shared/lib/utils';
+import { PlaceHolderImages } from '@/shared/lib/placeholder-images';
 import { useScrollAnimation } from '@/shared/hooks/use-scroll-animation';
 import {
 	User,
@@ -183,6 +185,7 @@ const processCards = [
 /* ─── Page ──────────────────────────────────────────────────────────────────── */
  
 export default function PreedFinancialIntelligence() {
+	const projectImage = PlaceHolderImages.find(img => img.id === 'preed');
 	const { ref: heroRef, isVisible: heroVisible } =
 		useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 	const { ref: screensRef, isVisible: screensVisible } =
@@ -348,98 +351,23 @@ export default function PreedFinancialIntelligence() {
 								screensVisible ? 'opacity-100' : 'opacity-0 translate-y-8'
 							)}
 						>
-							{/* App thumbnail — dark preview */}
-							<div className="lg:col-span-5">
-								<div className="relative bg-[#0D1117] rounded-[1.5rem] overflow-hidden border border-white/5 shadow-2xl aspect-[4/3]">
-									{/* Sidebar */}
-									<div className="absolute left-0 top-0 bottom-0 w-[56px] bg-[#111827] border-r border-white/[0.06] flex flex-col items-center pt-4 gap-1">
-										<div className="w-8 h-8 rounded-lg bg-[#1E3A8A] flex items-center justify-center mb-3">
-											<span className="text-[11px] font-bold text-[#93C5FD]">P</span>
-										</div>
-										{[BarChart2, LayoutDashboard, Briefcase, ArrowLeftRight, FileText].map(
-											(Icon, i) => (
-												<div
-													key={i}
-													className={cn(
-														'w-9 h-9 rounded-lg flex items-center justify-center',
-														i === 0
-															? 'bg-[#1E3A8A]'
-															: 'opacity-30'
-													)}
-												>
-													<Icon
-														className={cn(
-															'w-3.5 h-3.5',
-															i === 0 ? 'text-[#60A5FA]' : 'text-white'
-														)}
-													/>
-												</div>
-											)
-										)}
-									</div>
- 
-									{/* Content area */}
-									<div className="absolute left-[56px] right-0 top-0 bottom-0 p-5">
-										<p className="text-white text-[13px] font-semibold mb-0.5">
-											Prediction Analysis
-										</p>
-										<p className="text-white/30 text-[9px] mb-4 tracking-wide uppercase">
-											Configure parameters
-										</p>
- 
-										{/* Input card */}
-										<div className="bg-[#161D2F] rounded-xl p-4 mb-3 border border-white/[0.06]">
-											<div className="grid grid-cols-2 gap-2 mb-3">
-												<div className="bg-[#0D1117] rounded-lg p-2 border border-white/[0.07]">
-													<p className="text-white/30 text-[8px] mb-1 uppercase tracking-wider">
-														Investment
-													</p>
-													<p className="text-white text-[11px] font-semibold">
-														₹10,000
-													</p>
-												</div>
-												<div className="bg-[#0D1117] rounded-lg p-2 border border-white/[0.07]">
-													<p className="text-white/30 text-[8px] mb-1 uppercase tracking-wider">
-														Symbol
-													</p>
-													<p className="text-white text-[11px] font-semibold">
-														RELIANCE
-													</p>
-												</div>
-											</div>
-											<div className="bg-[#1E3A8A] rounded-lg py-2 text-center">
-												<p className="text-[#93C5FD] text-[9px] font-semibold tracking-widest uppercase">
-													Generate Prediction
-												</p>
-											</div>
-										</div>
- 
-										{/* Result card */}
-										<div className="bg-[#161D2F] rounded-xl p-4 border border-white/[0.06]">
-											<p className="text-white/60 text-[9px] uppercase tracking-wider mb-3">
-												Last Prediction Result
-											</p>
-											<div className="grid grid-cols-3 gap-2">
-												<div>
-													<p className="text-white/30 text-[8px] mb-1">Current</p>
-													<p className="text-white text-[11px] font-semibold">
-														₹2,450
-													</p>
-												</div>
-												<div>
-													<p className="text-white/30 text-[8px] mb-1">Predicted</p>
-													<p className="text-[#10B981] text-[11px] font-semibold">
-														₹2,580
-													</p>
-												</div>
-												<div>
-													<p className="text-white/30 text-[8px] mb-1">Confidence</p>
-													<p className="text-[#60A5FA] text-[11px] font-semibold">
-														78%
-													</p>
-												</div>
-											</div>
-										</div>
+							{/* App image */}
+							<div className="lg:col-span-5 flex flex-col">
+								<div className="relative w-full aspect-[1/1] md:aspect-[1/1] overflow-hidden bg-[#F4F6F8] card-surface group transition-transform duration-700 hover:scale-[1.01] hover:border-primary/50">
+									{projectImage && (
+										<Image
+											src={projectImage.imageUrl}
+											alt={projectImage.description}
+											fill
+											className="object-contain transition-transform duration-700 group-hover:scale-110"
+											data-ai-hint={projectImage.imageHint}
+										/>
+									)}
+
+									<div className="absolute bottom-8 left-8 z-20">
+										<span className="text-label text-foreground/60">
+											Project Artifact
+										</span>
 									</div>
 								</div>
 							</div>

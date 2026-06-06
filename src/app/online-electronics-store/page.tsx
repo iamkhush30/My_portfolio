@@ -217,17 +217,16 @@ export default function OnlineElectronicsStore() {
 						<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-stretch">
 
 							<div className="lg:col-span-5 flex flex-col">
-								<div className="relative w-full aspect-[1/1] md:aspect-[1/1] overflow-hidden bg-primary/10 card-surface group transition-transform duration-700 hover:scale-[1.01] hover:border-primary/50">
+								<div className="relative w-full aspect-[1/1] md:aspect-[1/1] overflow-hidden bg-[#F4F6F8] card-surface group transition-transform duration-700 hover:scale-[1.01] hover:border-primary/50">
 									{projectImage && (
 										<>
 											<Image
 												src={projectImage.imageUrl}
 												alt={projectImage.description}
 												fill
-												className="object-cover transition-transform duration-700 group-hover:scale-110"
+												className="object-contain transition-transform duration-700 group-hover:scale-110"
 												data-ai-hint={projectImage.imageHint}
 											/>
-											<div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-80 transition-opacity duration-500"></div>
 										</>
 									)}
 
