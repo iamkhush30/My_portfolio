@@ -6,7 +6,12 @@ export const metadata: Metadata = {
   title: 'Khush Makwana | Hybrid Engineer & Designer',
   description: 'Portfolio of Khush Makwana, a hybrid engineer specializing in DevOps infrastructure and human-centered UI/UX design. Architecting logic into art.',
   icons: {
-    icon: '/favicon.png',
+    icon: [
+      { url: '/favicon.png?v=1', type: 'image/png', sizes: '256x256' },
+      { url: '/worldicon.png', type: 'image/png', sizes: 'any' }
+    ],
+    apple: '/favicon.png?v=1',
+    shortcut: '/favicon.png?v=1',
   },
 };
 
@@ -18,6 +23,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" type="image/png" href="/favicon.png?v=1" sizes="256x256" />
+        <link rel="alternate icon" type="image/png" href="/worldicon.png" sizes="any" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0A0F1E" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

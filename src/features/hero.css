@@ -147,9 +147,20 @@
 /* ── TAGLINE ── */
 .hero-tagline { margin-bottom: var(--hero-stack-gap); }
 .screen-color .hero-tagline { color: #3a4060; }
-.screen-wire  .hero-tagline { color: #999; display: flex; align-items: center; gap: 10px; }
-.screen-wire  .hero-tagline::after {
-  content: ''; flex: 1; height: 0; border-top: 1px dashed #ccc;
+.screen-wire  .hero-tagline { color: #999; display: block; }
+
+.screen-wire .hero-tagline > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hero-stack-gap);
+  width: 100%;
+}
+
+.screen-wire .hero-tagline > div > div {
+  height: 11px;
+  background: transparent;
+  border: 1px solid #d5d5d5;
+  border-radius: 2px;
 }
 
 /* ── TEXT WRAPPER ── */
