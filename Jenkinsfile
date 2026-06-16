@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NEXUS_URL = 'nexus`:8082'
+        NEXUS_URL = 'nexus:8082'
         IMAGE_NAME = 'portfolio'
         IMAGE_TAG = 'latest'
     }
