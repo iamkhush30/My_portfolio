@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NEXUS_URL = 'localhost:8082'
+        NEXUS_URL = '192.168.64.1:8082'
         IMAGE_NAME = 'portfolio'
         IMAGE_TAG = 'latest'
     }
@@ -33,3 +33,4 @@ pipeline {
         }
     }
 }
+
