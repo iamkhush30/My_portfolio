@@ -28,9 +28,15 @@ pipeline {
 
         stage('Push to Nexus') {
             steps {
-                sh 'docker push ${NEXUS_URL}/${IMAGE_NAME}:${IMAGE_TAG}'
+                withCredentials([usernamePassword(
+                    credentialsId: 'nexus-creds',
+                    usernameVariable: 'NEXUS_USER',
+                    passwordVariable: 'NEXUS_PASS'
+                )]) {
+                    sh 'docker login -u $NEXUS_USER -p $NEXUS_PASS ${NEXUS_URL}'
+                    sh 'docker push ${NEXUS_URL}/${IMAGE_NAME}:${IMAGE_TAG}'
+                }
             }
         }
     }
 }
-
