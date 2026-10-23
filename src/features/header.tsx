@@ -437,6 +437,7 @@ export const Header = () => {
                             <li key={item.label}>
                               <Link
                                 href={item.href}
+                                tabIndex={mobileMenuOpen ? 0 : -1}
                                 onClick={(e) => handleMobileNavClick(e, item.id)}
                                 className={cn(
                                   "flex w-full items-center justify-between gap-3 text-left py-3 px-4 rounded-lg side-menu-item transition-all duration-300",

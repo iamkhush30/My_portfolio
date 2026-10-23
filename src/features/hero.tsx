@@ -312,9 +312,12 @@ export const Hero = () => {
       <div className="hero-screen screen-color">
         <div className="hero-body">
           <div className="hero-left">
-            <h1 className="hero-name text-display text-left" aria-label="Khush Makwana">
-              <span className="hero-name-first">Khush</span>{" "}
-              <span className="hero-name-last">Makwana</span>
+            <h1 className="hero-name text-display text-left">
+              <span className="sr-only">Khush Makwana</span>
+              <span aria-hidden="true">
+                <span className="hero-name-first">Khush</span>{" "}
+                <span className="hero-name-last">Makwana</span>
+              </span>
             </h1>
             <p className="text-label text-primary mt-3 mb-4 tracking-widest uppercase">Cloud & DevOps Engineer · UI/UX Designer</p>
             <p className="hero-tagline text-body text-left">Where cloud infrastructure meets intention — I architect automated CI/CD pipelines, containerized systems, and human-centered interfaces.</p>

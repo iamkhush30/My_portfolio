@@ -20,8 +20,10 @@ export const StickySectionNav: React.FC<StickySectionNavProps> = ({ sections }) 
   const activeIndex = sections.findIndex((s) => s.id === activeSection);
   const currentIndexNumber = activeIndex >= 0 ? activeIndex + 1 : 1;
 
-  // Real-time scroll listener for edge safety (top/bottom snap)
+  // Real-time scroll listener for edge safety (top/bottom snap) - Desktop only
   useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth < 1280) return;
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
 
@@ -44,8 +46,10 @@ export const StickySectionNav: React.FC<StickySectionNavProps> = ({ sections }) 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sections]);
 
-  // IntersectionObserver: accurately tracks active section in reading viewport zone
+  // IntersectionObserver: accurately tracks active section in reading viewport zone - Desktop only
   useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth < 1280) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -94,7 +98,7 @@ export const StickySectionNav: React.FC<StickySectionNavProps> = ({ sections }) 
   return (
     <aside
       aria-label="In-page section navigator"
-      className="hidden lg:block sticky top-28 w-[270px] shrink-0 self-start z-30 select-none"
+      className="hidden xl:block sticky top-28 w-[270px] shrink-0 self-start z-30 select-none"
     >
       {/* ── Futuristic Dark Architectural HUD Console ── */}
       <div className="relative rounded-2xl bg-[#0A0F1E] border border-blue-900/40 p-5 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.6)] overflow-hidden">

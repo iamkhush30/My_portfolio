@@ -150,9 +150,9 @@ export const DesignProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
             </div>
           </div>
 
-          {/* Main Layout: Sticky TOC + Content Body */}
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start relative">
-            {/* Sticky TOC on desktop */}
+          {/* Main Layout: Sticky TOC on XL desktop + Full-Width Content Body on Mobile/Tablet */}
+          <div className="flex flex-col xl:flex-row gap-10 xl:gap-14 items-start relative">
+            {/* Sticky TOC on desktop (strictly hidden on mobile & tablets) */}
             <StickySectionNav sections={sections} />
 
             {/* Content Body */}
@@ -386,7 +386,7 @@ export const DesignProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                             type="button"
                             onClick={() => setActiveScreenIndex(sIdx)}
                             className={cn(
-                              "flex-1 min-w-[140px] px-4 py-2.5 rounded-lg text-xs font-mono font-bold transition-all text-center flex items-center justify-center cursor-pointer",
+                              "flex-1 min-w-[110px] sm:min-w-[140px] px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs font-mono font-bold transition-all text-center flex items-center justify-center cursor-pointer",
                               isSelected
                                 ? "bg-white text-blue-600 shadow-sm border border-slate-200"
                                 : "text-slate-600 hover:text-slate-900 hover:bg-white/60 border border-transparent"
@@ -403,12 +403,12 @@ export const DesignProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                       <div className="space-y-5">
                         <div className="rounded-xl overflow-hidden border border-slate-800 bg-[#0A0F1E] shadow-2xl">
                           {/* Browser Window Chrome */}
-                          <div className="px-4 py-3 bg-[#0E172C] border-b border-slate-800 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
-                              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
-                              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
-                              <span className="ml-3 text-[11px] font-mono text-slate-400 bg-[#080D1A] px-3 py-1 rounded border border-slate-800">
+                          <div className="px-3 sm:px-4 py-2.5 sm:py-3 bg-[#0E172C] border-b border-slate-800 flex items-center justify-between">
+                            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block shrink-0" />
+                              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block shrink-0" />
+                              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block shrink-0" />
+                              <span className="ml-2 sm:ml-3 text-[10px] sm:text-[11px] font-mono text-slate-400 bg-[#080D1A] px-2.5 sm:px-3 py-1 rounded border border-slate-800 truncate max-w-[150px] xs:max-w-[200px] sm:max-w-none">
                                 preed.app / {project.proofScreens[activeScreenIndex].title.toLowerCase().replace(/\s+/g, '-')}
                               </span>
                             </div>
@@ -421,7 +421,7 @@ export const DesignProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                           <div className="relative w-full overflow-hidden bg-[#0B1326] flex items-center justify-center">
                             <Image
                               src={project.proofScreens[activeScreenIndex].image}
-                              alt={project.proofScreens[activeScreenIndex].title}
+                              alt={`${project.proofScreens[activeScreenIndex].title} — ${project.title} Interface View by Khush Makwana`}
                               width={1920}
                               height={880}
                               className="w-full h-auto object-contain block"
@@ -435,9 +435,9 @@ export const DesignProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                         {/* Technical Highlights & Implementation Notes */}
                         <div className="p-5 rounded-xl bg-slate-50 border border-border space-y-3">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <h4 className="text-sm font-bold text-foreground">
+                            <p className="text-sm font-bold text-foreground">
                               {project.proofScreens[activeScreenIndex].title}
-                            </h4>
+                            </p>
                             <span className="text-xs font-mono text-muted-foreground">
                               Screen 0{activeScreenIndex + 1} of 0{project.proofScreens.length}
                             </span>
@@ -493,9 +493,9 @@ export const DesignProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                               <div key={pIdx} className="space-y-1">
                                 <div className="flex items-center gap-2">
                                   <CheckCircle2 size={14} className="text-primary shrink-0" />
-                                  <h4 className="text-xs font-semibold text-foreground">
+                                  <span className="text-xs font-semibold text-foreground">
                                     {point.title}
-                                  </h4>
+                                  </span>
                                 </div>
                                 <p className="text-xs text-muted-foreground pl-5 leading-relaxed">
                                   {point.detail}
@@ -512,7 +512,7 @@ export const DesignProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                     <div className="relative aspect-[16/10] sm:aspect-[21/9] rounded-xl overflow-hidden bg-slate-900 border border-border">
                       <Image
                         src={project.image}
-                        alt={project.title}
+                        alt={`${project.title} — Interface design and UX system visual by Khush Makwana`}
                         fill
                         className="object-cover"
                         sizes="(max-width: 1200px) 100vw, 1000px"

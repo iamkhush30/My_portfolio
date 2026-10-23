@@ -114,6 +114,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#080B14" />
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.fontshare.com" />
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="anonymous" />
         <link
           href="https://api.fontshare.com/v2/css?f[]=clash-display@300,400,500,600&display=swap"
           rel="stylesheet"

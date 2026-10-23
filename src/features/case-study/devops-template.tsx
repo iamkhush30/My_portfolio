@@ -167,9 +167,9 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
             </div>
           </div>
 
-          {/* Main Layout: Sticky TOC + Content Body */}
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start relative">
-            {/* Sticky TOC on desktop */}
+          {/* Main Layout: Sticky TOC on XL desktop + Full-Width Content Body on Mobile/Tablet */}
+          <div className="flex flex-col xl:flex-row gap-10 xl:gap-14 items-start relative">
+            {/* Sticky TOC on desktop (strictly hidden on mobile & tablets) */}
             <StickySectionNav sections={sections} />
 
             {/* Content Body */}
@@ -256,18 +256,26 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                       </span>
                     </div>
 
-                    {/* Hover-Driven Stage Nodes (Non-Clickable) */}
+                    {/* Mobile interactive cue */}
+                    <div className="sm:hidden mb-3">
+                      <span className="text-[10px] font-mono text-blue-400/90 bg-blue-950/70 px-2.5 py-1 rounded-md border border-blue-500/20 inline-block">
+                        Tap any stage to view telemetry & commands
+                      </span>
+                    </div>
+
+                    {/* Interactive Stage Nodes */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                       {project.stages.map((stage, idx) => {
                         const isCurrent = activeStage === idx;
                         return (
                           <div
                             key={idx}
+                            onClick={() => setActiveStage(idx)}
                             onMouseEnter={() => setActiveStage(idx)}
                             onFocus={() => setActiveStage(idx)}
                             tabIndex={0}
                             className={cn(
-                              "p-4 rounded-xl border text-left transition-all duration-200 cursor-default outline-none select-none",
+                              "p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer sm:cursor-default outline-none select-none",
                               isCurrent
                                 ? "bg-blue-950/70 border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.35)]"
                                 : "bg-white/[0.03] border-white/10 hover:border-blue-400/40 hover:bg-white/[0.06]"
@@ -302,16 +310,16 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                               <span className="text-[11px] font-mono text-blue-400 uppercase tracking-widest block font-semibold">
                                 Stage Telemetry · {project.stages[activeStage].name}
                               </span>
-                              <h4 className="text-base font-bold text-white">
+                              <p className="text-base font-bold text-white">
                                 {project.stages[activeStage].tool}
-                              </h4>
+                              </p>
                             </div>
                           </div>
 
                           {project.stages[activeStage].command && (
-                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/60 text-emerald-400 font-mono text-xs border border-emerald-900/40 shrink-0 self-start sm:self-auto">
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/60 text-emerald-400 font-mono text-xs border border-emerald-900/40 shrink-0 self-start sm:self-auto max-w-full overflow-x-auto">
                               <Terminal size={13} className="text-emerald-400 shrink-0" />
-                              <code>{project.stages[activeStage].command}</code>
+                              <code className="whitespace-nowrap">{project.stages[activeStage].command}</code>
                             </div>
                           )}
                         </div>
@@ -528,7 +536,7 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                             </span>
                           </div>
                         </div>
-                        <code className="text-xs font-mono bg-slate-100 text-slate-800 px-3 py-1.5 rounded-md border border-slate-200 shrink-0 self-start sm:self-auto">
+                        <code className="text-xs font-mono bg-slate-100 text-slate-800 px-3 py-1.5 rounded-md border border-slate-200 shrink-0 self-start sm:self-auto max-w-full overflow-x-auto">
                           {item.command}
                         </code>
                       </div>

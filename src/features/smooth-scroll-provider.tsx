@@ -14,10 +14,11 @@ export const SmoothScrollProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const lenis = new Lenis({
       lerp: 0.1,
-      duration: 1.5,
+      duration: 1.2,
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
+      touchMultiplier: 1,
+      syncTouch: false,
       infinite: false,
     });
 

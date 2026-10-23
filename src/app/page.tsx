@@ -44,8 +44,25 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Khush Makwana Portfolio',
+    url: siteConfig.url,
+    description:
+      'Portfolio of Khush Makwana — Cloud & DevOps Engineer and UI/UX Designer.',
+    author: {
+      '@type': 'Person',
+      name: siteConfig.name,
+    },
+  };
+
   return (
     <main className="relative min-h-screen bg-background overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <Header />
 
       {/* Hero is fixed — sits behind content scroll */}

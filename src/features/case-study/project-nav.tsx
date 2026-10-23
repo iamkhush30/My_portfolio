@@ -21,7 +21,6 @@ export const ProjectNav: React.FC<ProjectNavProps> = ({ currentSlug }) => {
       <Link
         href={`/${prev.slug}`}
         className="group p-6 rounded-2xl bg-white border border-border hover:border-primary/50 hover:shadow-lg transition-all flex flex-col justify-between"
-        aria-label={`Previous project: ${prev.title}`}
       >
         <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-3 group-hover:text-primary transition-colors">
           <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
@@ -31,9 +30,9 @@ export const ProjectNav: React.FC<ProjectNavProps> = ({ currentSlug }) => {
           <span className="text-[11px] font-mono uppercase tracking-wider text-primary font-bold">
             {prev.category}
           </span>
-          <h4 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors mt-0.5">
+          <span className="block text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors mt-0.5">
             {prev.title}
-          </h4>
+          </span>
         </div>
       </Link>
 
@@ -41,7 +40,6 @@ export const ProjectNav: React.FC<ProjectNavProps> = ({ currentSlug }) => {
       <Link
         href={`/${next.slug}`}
         className="group p-6 rounded-2xl bg-white border border-border hover:border-primary/50 hover:shadow-lg transition-all flex flex-col justify-between text-left sm:text-right"
-        aria-label={`Next project: ${next.title}`}
       >
         <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-3 sm:justify-end group-hover:text-primary transition-colors">
           <span>Next Project</span>
@@ -51,9 +49,9 @@ export const ProjectNav: React.FC<ProjectNavProps> = ({ currentSlug }) => {
           <span className="text-[11px] font-mono uppercase tracking-wider text-primary font-bold">
             {next.category}
           </span>
-          <h4 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors mt-0.5">
+          <span className="block text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors mt-0.5">
             {next.title}
-          </h4>
+          </span>
         </div>
       </Link>
     </nav>

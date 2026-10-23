@@ -56,7 +56,7 @@ export const Breadcrumbs: React.FC<BreadcrumbProps> = ({ projectTitle, projectSl
         My Vault
       </Link>
       <ChevronRight size={12} className="opacity-40" aria-hidden="true" />
-      <span className="text-foreground font-medium truncate max-w-[220px] sm:max-w-none" aria-current="page">
+      <span className="text-foreground font-medium truncate max-w-[130px] sm:max-w-none" aria-current="page">
         {projectTitle}
       </span>
     </nav>

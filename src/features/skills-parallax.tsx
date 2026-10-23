@@ -153,8 +153,8 @@ const CAPABILITIES: CapabilityCardData[] = [
 ];
 
 export const SkillsParallax = () => {
-  const [activeDevopsNode, setActiveDevopsNode] = useState<string>('build');
-  const [activeDesignNode, setActiveDesignNode] = useState<string>('wireframe');
+  const [activeDevopsNode, setActiveDevopsNode] = useState<string>(DEVOPS_NODES[0].id);
+  const [activeDesignNode, setActiveDesignNode] = useState<string>(DESIGN_NODES[0].id);
 
   const selectedDevops =
     DEVOPS_NODES.find((n) => n.id === activeDevopsNode) || DEVOPS_NODES[0];
