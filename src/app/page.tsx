@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Header } from '@/features/header';
 import { Hero } from '@/features/hero';
 import { ProjectGrid } from '@/features/project-grid';
@@ -6,6 +7,41 @@ import { AboutEducation } from '@/features/about-education';
 import { SkillsParallax } from '@/features/skills-parallax';
 import { ContactCTA } from '@/features/contact-cta';
 import { Footer } from '@/features/footer';
+import { siteConfig } from '@/shared/lib/site-config';
+
+export const metadata: Metadata = {
+  title: 'Khush Makwana | Cloud & DevOps Engineer, UI/UX Designer',
+  description:
+    'Explore the portfolio of Khush Makwana, featuring automated CI/CD pipelines, modular AWS cloud infrastructure, and human-centered UI/UX design systems.',
+  alternates: {
+    canonical: siteConfig.url,
+  },
+  openGraph: {
+    title: 'Khush Makwana | Cloud & DevOps Engineer, UI/UX Designer',
+    description:
+      'Explore the portfolio of Khush Makwana, featuring automated CI/CD pipelines, modular AWS cloud infrastructure, and human-centered UI/UX design systems.',
+    url: siteConfig.url,
+    siteName: 'Khush Makwana Portfolio',
+    type: 'website',
+    images: [
+      {
+        url: '/api/og?title=Khush%20Makwana&subtitle=Cloud%20%26%20DevOps%20Engineer%20%C2%B7%20UI%2FUX%20Designer&category=Portfolio',
+        width: 1200,
+        height: 630,
+        alt: 'Khush Makwana | Cloud & DevOps Engineer, UI/UX Designer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Khush Makwana | Cloud & DevOps Engineer, UI/UX Designer',
+    description:
+      'Explore the portfolio of Khush Makwana, featuring automated CI/CD pipelines, modular AWS cloud infrastructure, and human-centered UI/UX design systems.',
+    images: [
+      '/api/og?title=Khush%20Makwana&subtitle=Cloud%20%26%20DevOps%20Engineer%20%C2%B7%20UI%2FUX%20Designer&category=Portfolio',
+    ],
+  },
+};
 
 export default function Home() {
   return (
@@ -14,21 +50,6 @@ export default function Home() {
 
       {/* Hero is fixed — sits behind content scroll */}
       <Hero />
-
-      {/*
-        FIX: Split the old single div (z-10 + paddingTop:100vh) into two:
-
-        1. A pointer-events-none spacer — pushes scroll down by 100vh
-           without creating a stacking context that blocks the hero handle.
-
-        2. The real content wrapper — z-10, pointer-events normal,
-           scroll and all interactions work exactly as before.
-
-        Root cause: the original single div had both z-10 (stacking context)
-        AND paddingTop:100vh, meaning it physically covered the full hero
-        viewport with an invisible blocking layer, swallowing every pointer
-        event before they reached the slider handle.
-      */}
 
       {/* SPACER: pushes scroll, never blocks pointer events */}
       <div

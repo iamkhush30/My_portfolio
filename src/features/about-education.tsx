@@ -7,18 +7,7 @@ export const AboutEducation: React.FC = () => {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
 
-  const fullText = `I'm Khush Makwana — a Computer Science student who works 
-across DevOps engineering and UI/UX design. I've built 
-CI/CD pipelines using GitLab, Jenkins, Docker, and Kubernetes, 
-taking projects from code commit to containerized deployment 
-without manual steps. On the design side, I've designed 100+ 
-screens for a different projects, created visual content 
-that contributed to significant engagement growth for a 
-financial services client, and guided university students 
-through Figma and interface design fundamentals. I don't 
-treat these as separate careers — the engineering makes my 
-designs more buildable, and the design makes my systems 
-more considered.`;
+  const fullText = `I'm Khush Makwana — a Cloud & DevOps Engineer and UI/UX Designer. I architect automated CI/CD pipelines using GitLab, Jenkins, Docker, and Kubernetes, delivering software from code commit to containerized registry without manual handoffs. On AWS, I provision modular infrastructure with Terraform, multi-AZ networking, and proactive CloudWatch telemetry. On the design side, I engineer high-density dashboards, wireframes, and design systems in Figma. I treat both disciplines as one: engineering makes my interfaces buildable, and design makes my infrastructure intuitive.`;
 
   const words = fullText.split(" ");
   const totalLetters = fullText.length;
@@ -40,15 +29,16 @@ more considered.`;
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 sm:gap-y-10 lg:gap-x-20 items-start w-full">
           <div className="lg:col-span-4 flex flex-col">
             <div className="flex flex-col">
+              <span className="text-label text-primary mb-2">Core Identity</span>
               <h2 className="text-heading text-foreground tracking-tighter">About</h2>
             </div>
             <div className="mt-8 sm:mt-10 lg:mt-24 flex flex-col gap-8 sm:gap-10">
               <div className="flex flex-col gap-2">
-                <span className="text-label text-primary">CURRENT FOCUS</span>
+                <span className="text-label text-primary">PRIMARY FOCUS</span>
                 <span className="text-body text-foreground leading-[1.45]">
-                  Learning Kubernetes orchestration
+                  Cloud Infrastructure & DevOps Pipelines
                   <br />
-                  and Terraform infrastructure-as-code
+                  <span className="text-muted-foreground text-sm">Terraform · Docker · Kubernetes · AWS</span>
                 </span>
               </div>
             </div>
@@ -56,27 +46,32 @@ more considered.`;
 
           <div className="lg:col-span-8 flex items-center">
             <div className="max-w-4xl">
+              {/* Screen reader / crawler plain text */}
               <p
                 ref={textRef}
+                aria-label={fullText}
                 className="font-body font-medium text-[clamp(16px,4.5vw,28px)] text-black leading-[1.4] text-left tracking-tight flex flex-wrap max-w-none sm:max-w-5xl"
               >
-                {words.map((word, wordIndex) => {
-                  return (
-                    <span key={wordIndex} className="inline-block mr-[0.25em] whitespace-nowrap">
-                      {word.split("").map((letter, letterIndex) => {
-                        const start = letterCount / totalLetters;
-                        const end = start + (1 / totalLetters);
-                        letterCount++;
-                        return (
-                          <Letter key={letterIndex} progress={scrollYProgress} range={[start, end]}>
-                            {letter}
-                          </Letter>
-                        );
-                      })}
-                      {(() => { letterCount++; return null; })()}
-                    </span>
-                  );
-                })}
+                <span className="sr-only">{fullText}</span>
+                <span aria-hidden="true" className="flex flex-wrap">
+                  {words.map((word, wordIndex) => {
+                    return (
+                      <span key={wordIndex} className="inline-block mr-[0.25em] whitespace-nowrap">
+                        {word.split("").map((letter, letterIndex) => {
+                          const start = letterCount / totalLetters;
+                          const end = start + (1 / totalLetters);
+                          letterCount++;
+                          return (
+                            <Letter key={letterIndex} progress={scrollYProgress} range={[start, end]}>
+                              {letter}
+                            </Letter>
+                          );
+                        })}
+                        {(() => { letterCount++; return null; })()}
+                      </span>
+                    );
+                  })}
+                </span>
               </p>
             </div>
           </div>

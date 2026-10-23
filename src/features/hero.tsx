@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Linkedin, Github, Instagram, Mail } from "lucide-react";
-import { RippleButton } from "@/shared/ui/ripple-button";
+import { Linkedin, Github, Mail } from "lucide-react";
 import "./hero.css";
 
 /* ─── CMD lines ─── */
@@ -313,36 +312,31 @@ export const Hero = () => {
       <div className="hero-screen screen-color">
         <div className="hero-body">
           <div className="hero-left">
-            <h1 className="hero-name text-display text-left">
-              <span className="hero-name-first">Khush</span>
+            <h1 className="hero-name text-display text-left" aria-label="Khush Makwana">
+              <span className="hero-name-first">Khush</span>{" "}
               <span className="hero-name-last">Makwana</span>
             </h1>
-            <p className="text-label text-primary mt-3 mb-4 tracking-widest uppercase">DevOps Engineer & UI/UX Designer</p>
-            <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
+            <p className="text-label text-primary mt-3 mb-4 tracking-widest uppercase">Cloud & DevOps Engineer · UI/UX Designer</p>
+            <p className="hero-tagline text-body text-left">Where cloud infrastructure meets intention — I architect automated CI/CD pipelines, containerized systems, and human-centered interfaces.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
-            <div className="hero-btns">
-              <RippleButton asChild className="hero-btn-primary text-button">
-                <a href="#vault" aria-label="View Archive">
-                  View Archive
-                  <svg className="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                    <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M13 5l6 7-6 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-              </RippleButton>
+            <div className="hero-btns flex flex-wrap items-center gap-3">
+              <a href="#vault" className="hero-btn-primary text-button" aria-label="View projects">
+                <span>View projects</span>
+                <svg className="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M13 5l6 7-6 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
             </div>
             <div className="hero-socials">
-              <a href="https://linkedin.com/in/khush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
-                <Linkedin size={18} />
+              <a href="https://linkedin.com/in/khush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon" aria-label="Khush Makwana on LinkedIn">
+                <Linkedin size={18} aria-hidden="true" />
               </a>
-              <a href="https://github.com/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
-                <Github size={18} />
+              <a href="https://github.com/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon" aria-label="Khush Makwana on GitHub">
+                <Github size={18} aria-hidden="true" />
               </a>
-              <a href="https://www.instagram.com/iamkhush.30?igsh=aHkxYmN6d3dkcTNt" target="_blank" rel="noopener noreferrer" className="hero-social-icon">
-                <Instagram size={18} />
-              </a>
-              <a href="mailto:khushmakwana1980@gmail.com" className="hero-social-icon">
-                <Mail size={18} />
+              <a href="mailto:khushmakwana1980@gmail.com" className="hero-social-icon" aria-label="Send email to Khush Makwana">
+                <Mail size={18} aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -387,32 +381,29 @@ export const Hero = () => {
         </div>
       </div>
 
-      <div className="hero-screen screen-wire" ref={wireRef}>
-        <div className="hero-body">
+      <div className="hero-screen screen-wire" ref={wireRef} aria-hidden="true" tabIndex={-1}>
+        <div className="hero-body pointer-events-none">
           <div className="hero-left">
-            <h1 className="hero-name text-display text-left">
-              <span className="hero-name-first">Khush</span>
+            <div className="hero-name text-display text-left">
+              <span className="hero-name-first">Khush</span>{" "}
               <span className="hero-name-last">Makwana</span>
-            </h1>
-            <p className="text-label text-primary mt-3 mb-4 tracking-widest uppercase">DevOps Engineer & UI/UX Designer</p>
-            <p className="hero-tagline text-body text-left">Where infrastructure meets intention — I build CI/CD pipelines, containerized systems, and interfaces people actually enjoy using.</p>
+            </div>
+            <p className="text-label text-primary mt-3 mb-4 tracking-widest uppercase">Cloud & DevOps Engineer · UI/UX Designer</p>
+            <p className="hero-tagline text-body text-left">Where cloud infrastructure meets intention — I architect automated CI/CD pipelines, containerized systems, and human-centered interfaces.</p>
             <div className="hero-availability">Open to select projects — let's talk</div>
-            <div className="hero-btns">
-              <RippleButton asChild className="hero-btn-primary text-button">
-                <a href="#vault" aria-label="View Archive">
-                  View Archive
-                  <svg className="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                    <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M13 5l6 7-6 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-              </RippleButton>
+            <div className="hero-btns flex flex-wrap items-center gap-3">
+              <div className="hero-btn-primary text-button" aria-hidden="true">
+                <span>View projects</span>
+                <svg className="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M13 5l6 7-6 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
             </div>
             <div className="hero-socials">
-              <a href="https://linkedin.com/in/khush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">in</a>
-              <a href="https://github.com/iamkhush30" target="_blank" rel="noopener noreferrer" className="hero-social-icon">gh</a>
-              <a href="https://www.instagram.com/iamkhush.30?igsh=aHkxYmN6d3dkcTNt" target="_blank" rel="noopener noreferrer" className="hero-social-icon">ig</a>
-              <a href="mailto:khushmakwana1980@gmail.com" className="hero-social-icon">@</a>
+              <span className="hero-social-icon">in</span>
+              <span className="hero-social-icon">gh</span>
+              <span className="hero-social-icon">@</span>
             </div>
           </div>
 

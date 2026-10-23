@@ -1,38 +1,40 @@
-
 "use client";
 
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Mail } from 'lucide-react';
 
 export const ContactCTA = () => {
   return (
     <a
       href="mailto:khushmakwana1980@gmail.com"
-      className="group relative z-20 flex flex-col items-center justify-center transition-all duration-700 px-4 sm:px-6 w-full gap-3 bg-secondary border-t border-border py-7 sm:!py-4 section-light snap-start snap-always overflow-hidden"
+      className="group relative z-20 flex flex-col items-center justify-center transition-all duration-700 px-4 sm:px-6 w-full gap-2.5 bg-secondary border-t border-border py-8 sm:py-7 section-light snap-start snap-always overflow-hidden"
     >
       {/* Background Hover Effect */}
-      <div className="absolute inset-0 bg-primary/5 scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-in-out origin-left -z-10"></div>
+      <div className="absolute inset-0 bg-primary/5 scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-in-out origin-left -z-10" />
 
       {/* Label/Overline */}
-      <span className="text-label group-hover:text-primary transition-colors duration-500">
-        Draft An Email
-      </span>
+      <div className="flex items-center gap-2">
+        <Mail size={14} className="text-primary" aria-hidden="true" />
+        <span className="text-label group-hover:text-primary transition-colors duration-500 font-mono text-xs uppercase tracking-widest">
+          Initiate Contact
+        </span>
+      </div>
 
-      {/* Main Narrative Heading & Icon - Merged into a single horizontal block for flat DOM */}
+      {/* Main Narrative Heading & Icon */}
       <h2 className="text-heading text-foreground group-hover:text-primary transition-colors duration-500 text-center flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-6 max-w-[1400px] leading-tight px-2 sm:px-0">
-        Let's Cook Up Conversation
+        Let's Build Something Resilient
 
-        {/* Interactive Icon Component - Now a direct child of h2 to avoid parent div wrappers */}
+        {/* Interactive Icon Component */}
         <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 shrink-0">
           <div className="relative overflow-hidden w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
-            <ArrowRight className="w-full h-full text-foreground group-hover:text-primary transition-all transform -translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 duration-500 ease-out" />
-            <ArrowRight className="absolute w-full h-full text-foreground group-hover:text-primary transition-all transform group-hover:translate-x-12 group-hover:opacity-0 duration-500 ease-in" />
+            <ArrowRight className="w-full h-full text-foreground group-hover:text-primary transition-all transform -translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 duration-500 ease-out" aria-hidden="true" />
+            <ArrowRight className="absolute w-full h-full text-foreground group-hover:text-primary transition-all transform group-hover:translate-x-12 group-hover:opacity-0 duration-500 ease-in" aria-hidden="true" />
           </div>
         </div>
       </h2>
 
       {/* Architectural Bottom Line Animation */}
-      <div className="absolute bottom-0 left-0 w-0 h-[3px] bg-primary group-hover:w-full transition-all duration-1000 ease-in-out origin-left"></div>
+      <div className="absolute bottom-0 left-0 w-0 h-[3px] bg-primary group-hover:w-full transition-all duration-1000 ease-in-out origin-left" />
     </a>
   );
 };

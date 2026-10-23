@@ -2,55 +2,55 @@
   "placeholderImages": [
     {
       "id": "hero-image",
-      "description": "Sophisticated abstract digital art representing technology and design. Recommended size: 1920x1080.",
+      "description": "Abstract digital artwork representing cloud infrastructure, container nodes, and modern UI systems.",
       "imageUrl": "https://picsum.photos/seed/alchemist/1200/800",
       "imageHint": "abstract technology digital art"
     },
     {
       "id": "profile-placeholder",
-      "description": "Professional portrait placeholder. Recommended size: 800x800.",
+      "description": "Khush Makwana portrait, Cloud & DevOps Engineer and UI/UX Designer.",
       "imageUrl": "https://picsum.photos/seed/portrait/600/600",
       "imageHint": "professional portrait"
     },
     {
       "id": "project-1",
-      "description": "Cloud infrastructure and automation dashboard. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "description": "Cloud infrastructure monitoring dashboard with metric telemetry and deployment health.",
       "imageUrl": "https://picsum.photos/seed/project1/1000/700",
       "imageHint": "tech dashboard interface"
     },
     {
       "id": "project-2",
-      "description": "Online Electronics Store e-commerce app. Recommended size: 1200x1600 (3:4 aspect ratio).",
+      "description": "Online Electronics Store mobile and desktop responsive e-commerce application design.",
       "imageUrl": "/assets/Electronic-Store.png",
       "imageHint": "e-commerce electronics store"
     },
     {
       "id": "project-3",
-      "description": "CI/CD pipeline visualization tool. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "description": "Interactive CI/CD pipeline stage visualization with automated trigger and artifact registry.",
       "imageUrl": "https://picsum.photos/seed/project3/1000/700",
       "imageHint": "network pipeline visual"
     },
     {
       "id": "project-4",
-      "description": "CI/CD pipeline breakdown visual. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "description": "Automated GitLab, Jenkins, Docker, and Nexus CI/CD pipeline architecture for ML application.",
       "imageUrl": "/assets/CICD-Pipeline.png",
       "imageHint": "ci cd pipeline"
     },
     {
       "id": "preed",
-      "description": "Preed — Financial Intelligence app screenshot. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "description": "Preed AI-powered financial intelligence and algorithmic stock prediction dashboard interface.",
       "imageUrl": "/assets/preed.png",
       "imageHint": "preed financial intelligence screenshot"
     },
     {
       "id": "project-5",
-      "description": "Next-gen glassmorphism interface design. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "description": "Futuristic design system components featuring glassmorphism and tactile contrast.",
       "imageUrl": "https://picsum.photos/seed/project5/1000/700",
       "imageHint": "abstract glass interface"
     },
     {
       "id": "project-6",
-      "description": "Cybersecurity automated threat detection. Recommended size for Vault: 1200x1600 (3:4 aspect ratio).",
+      "description": "Cloud security architecture diagram showing least-privilege IAM roles and encrypted state backends.",
       "imageUrl": "https://picsum.photos/seed/project6/1000/700",
       "imageHint": "cybersecurity network lock"
     }

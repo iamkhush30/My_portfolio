@@ -1,256 +1,415 @@
-
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { Badge } from '@/shared/ui/badge';
-import { Cloud, Palette, Server } from 'lucide-react';
+import {
+  Server,
+  Cloud,
+  Palette,
+  ArrowRight,
+  GitBranch,
+  Settings,
+  Box,
+  Database,
+  Rocket,
+  Activity,
+  Search,
+  Layout,
+  Smartphone,
+  CheckCircle2,
+} from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 
-interface SkillItem {
-  title: string;
-  bgTitle: string;
-  description: string;
+interface StackNode {
+  id: string;
+  label: string;
+  tool: string;
+  desc: string;
   icon: React.ReactNode;
-  tags: string[];
 }
 
-const skills: SkillItem[] = [
+const DEVOPS_NODES: StackNode[] = [
   {
-    title: "UI/UX Design",
-    bgTitle: "Design",
-    description: `I design wireframes, user flows, and prototypes interfaces that are clear, functional, and visually 
-                  deliberate — from information architecture and user flow design 
-                  to refined screens in Figma. I map out how users move 
-                  through a product before touching the visual layer. Every 
-                  layout decision has a reason. I approach each project by 
-                  understanding the context first, then building toward a design 
-                  that works before making it look good.`,
-    icon: <Palette className="w-10 h-10" />,
-    tags: ["UX Design", "UI Design", "Wireframing", "Prototyping"]
+    id: 'source',
+    label: 'Source',
+    tool: 'GitLab / Git',
+    desc: 'Version-controlled codebase with branch protections and commit triggers.',
+    icon: <GitBranch className="w-4 h-4 text-blue-400" />,
   },
   {
-    title: "DevOps Engineering",
-    bgTitle: "Systems",
-    description: `I build automated pipelines that handle everything from code commit to containerized deployment — including artifact management with Nexus Repository Manager and container orchestration with Kubernetes. No manual handoffs, no deployment guesswork. The goal is simple — code that passes should 
-                  ship without anyone touching it manually.`,
-    icon: <Server className="w-10 h-10" />,
-    tags: ["Pipeline Automation", "Artifact Management", "build Automation"]
+    id: 'build',
+    label: 'Build',
+    tool: 'Jenkins CI',
+    desc: 'Declarative pipelines running automated tests and artifact compilation.',
+    icon: <Settings className="w-4 h-4 text-blue-400" />,
   },
   {
-    title: "AWS Cloud Infrastructure",
-    bgTitle: "Cloud",
-    description: `I design and manage cloud environments on AWS — provisioning EC2 instances with the right sizing, structuring S3 buckets with proper lifecycle policies, and locking down access through fine-grained IAM roles and policies. CloudWatch sits on top of everything, giving me real-time visibility into what's 
-    running and alerting me before things break. The goal isn't just to get things running in the cloud — it's to make sure they stay running, stay secure, and stay observable without constant manual intervention.`,
-    icon: <Cloud className="w-10 h-10" />,
-    tags: ["EC2 & Compute", "S3 & Storage", "IAM & Policies"]
+    id: 'package',
+    label: 'Package',
+    tool: 'Docker',
+    desc: 'Immutable, multi-stage container images built for deterministic runs.',
+    icon: <Box className="w-4 h-4 text-blue-400" />,
+  },
+  {
+    id: 'registry',
+    label: 'Registry',
+    tool: 'Nexus / ECR',
+    desc: 'Encrypted artifact storage with semantic build-ID version tagging.',
+    icon: <Database className="w-4 h-4 text-blue-400" />,
+  },
+  {
+    id: 'deploy',
+    label: 'Deploy',
+    tool: 'Kubernetes / AWS',
+    desc: 'Zero-downtime rolling deployments and declarative cluster workloads.',
+    icon: <Rocket className="w-4 h-4 text-blue-400" />,
+  },
+  {
+    id: 'monitor',
+    label: 'Monitor',
+    tool: 'CloudWatch / Prom',
+    desc: 'Real-time telemetry, automated health probes, and alert thresholds.',
+    icon: <Activity className="w-4 h-4 text-blue-400" />,
   },
 ];
 
-const SkillCard = ({
-  skill,
-  index,
-  isEven,
-  isVisible,
-  cardRef
-}: {
-  skill: SkillItem;
-  index: number;
-  isEven: boolean;
-  isVisible: boolean;
-  cardRef: (el: HTMLDivElement | null) => void;
-}) => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+const DESIGN_NODES: StackNode[] = [
+  {
+    id: 'research',
+    label: 'Research',
+    tool: 'User Discovery',
+    desc: 'User journey mapping, cognitive heuristics, and workflow analysis.',
+    icon: <Search className="w-4 h-4 text-indigo-400" />,
+  },
+  {
+    id: 'wireframe',
+    label: 'Wireframe',
+    tool: 'Figma Low-Fi',
+    desc: 'Rapid structural architecture, layout hierarchy, and user flows.',
+    icon: <Layout className="w-4 h-4 text-indigo-400" />,
+  },
+  {
+    id: 'prototype',
+    label: 'Prototype',
+    tool: 'Figma Hi-Fi',
+    desc: 'Interactive micro-animations, design tokens, and density testing.',
+    icon: <Smartphone className="w-4 h-4 text-indigo-400" />,
+  },
+  {
+    id: 'handoff',
+    label: 'Handoff',
+    tool: 'Tokens & Specs',
+    desc: 'CSS variable tokens, responsive spacing, and component contracts.',
+    icon: <CheckCircle2 className="w-4 h-4 text-indigo-400" />,
+  },
+];
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+interface CapabilityCardData {
+  title: string;
+  bgTitle: string;
+  outcome: string; // Max 12 words
+  tools: string[];
+  proofHref: string;
+  stat: string;
+  statLabel: string;
+  icon: React.ReactNode;
+}
 
-    // Reduced intensity: multiplier changed from 10 to 4 to match project pages
-    const tiltX = ((y - centerY) / centerY) * -4;
-    const tiltY = ((x - centerX) / centerX) * 4;
-
-    setTilt({ x: tiltX, y: tiltY });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
-
-  return (
-    <div
-      ref={cardRef}
-      data-index={index}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={cn(
-        "relative w-full lg:w-[62%] min-h-[360px] sm:min-h-[420px] md:min-h-[460px] p-6 sm:p-8 md:p-12 bg-white card-surface transition-all duration-700 group opacity-0 flex-none flex flex-col overflow-hidden hover:border-primary/50",
-        isVisible && "animate-in fade-in slide-in-from-bottom-24 fill-mode-both opacity-100",
-        isEven ? "lg:mr-12 lg:-rotate-1" : "lg:ml-12 lg:-rotate-1"
-      )}
-      style={{
-        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-        // Reduced shadow intensity: multipliers changed to 0.8, blur reduced to 40px
-        boxShadow: tilt.x === 0 && tilt.y === 0
-          ? '0 10px 30px -5px rgba(0,0,0,0.05)'
-          : `${-tilt.y * 0.8}px ${tilt.x * 0.8}px 40px -10px rgba(0,0,0,0.15)`,
-        transition: tilt.x === 0 && tilt.y === 0
-          ? 'all 0.7s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.7s ease'
-          : 'transform 0.1s linear, box-shadow 0.1s linear, border-color 0.3s ease, opacity 0.7s cubic-bezier(0.2, 0, 0.2, 1)',
-        transformStyle: 'preserve-3d'
-      }}
-    >
-      <div
-        className="relative z-10 pointer-events-none w-full h-full flex flex-col flex-grow"
-        style={{ transform: 'translateZ(40px)' }}
-      >
-        <div className="flex items-start justify-between mb-8">
-          <div className="text-primary">
-            {skill.icon}
-          </div>
-        </div>
-
-        <h3 className="text-card-title mb-4">
-          {skill.title}
-        </h3>
-
-        <p className="text-body mb-8 max-w-2xl flex-grow">
-          {skill.description}
-        </p>
-
-        <div className="flex flex-wrap gap-2">
-          {skill.tags.map((tag, tagIdx) => (
-            <Badge key={tagIdx} variant="capsule">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+const CAPABILITIES: CapabilityCardData[] = [
+  {
+    title: 'Cloud & DevOps Engineering',
+    bgTitle: 'DevOps',
+    outcome:
+      'Automated end-to-end CI/CD pipelines shipping tested code without manual intervention.',
+    tools: ['GitLab CI', 'Jenkins', 'Docker', 'Kubernetes', 'Nexus'],
+    proofHref: '/cicd-pipeline-ml-app',
+    stat: '100%',
+    statLabel: 'Automated Delivery',
+    icon: <Server className="w-8 h-8 text-primary" />,
+  },
+  {
+    title: 'AWS Cloud Infrastructure',
+    bgTitle: 'AWS',
+    outcome:
+      'Modular AWS infrastructure with Terraform: dynamic Ubuntu AMIs, Nginx compute, encrypted S3, and DynamoDB.',
+    tools: ['Terraform', 'AWS EC2', 'AWS S3', 'DynamoDB', 'Nginx'],
+    proofHref: '/aws-terraform-infrastructure',
+    stat: 'ap-south-1',
+    statLabel: 'Primary Region',
+    icon: <Cloud className="w-8 h-8 text-primary" />,
+  },
+  {
+    title: 'UI/UX & Design Systems',
+    bgTitle: 'Design',
+    outcome:
+      'Data-dense interfaces, wireframes, and design systems engineered for cognitive clarity.',
+    tools: ['Figma', 'Wireframing', 'Design Systems', 'User Research', 'Prototyping'],
+    proofHref: '/preed-financial-intelligence',
+    stat: 'Atomic',
+    statLabel: 'Design System Architecture',
+    icon: <Palette className="w-8 h-8 text-primary" />,
+  },
+];
 
 export const SkillsParallax = () => {
-  const [scrollOffset, setScrollOffset] = useState(0);
-  const [visibleIndices, setVisibleIndices] = useState<Set<number>>(new Set());
-  const [headerVisible, setHeaderVisible] = useState(false);
+  const [activeDevopsNode, setActiveDevopsNode] = useState<string>('build');
+  const [activeDesignNode, setActiveDesignNode] = useState<string>('wireframe');
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const sectionProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
-      const clampedProgress = Math.max(0, Math.min(1, sectionProgress));
-
-      setScrollOffset(clampedProgress * 250 - 125);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (entry.target === headerRef.current) {
-              setHeaderVisible(true);
-              observer.unobserve(entry.target);
-            } else {
-              const index = Number(entry.target.getAttribute('data-index'));
-              setVisibleIndices((prev) => new Set(prev).add(index));
-              observer.unobserve(entry.target);
-            }
-          }
-        });
-      },
-      {
-        threshold: 0.15,
-        rootMargin: '0px 0px -5% 0px'
-      }
-    );
-
-    if (headerRef.current) {
-      observer.observe(headerRef.current);
-    }
-
-    cardRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const selectedDevops =
+    DEVOPS_NODES.find((n) => n.id === activeDevopsNode) || DEVOPS_NODES[0];
+  const selectedDesign =
+    DESIGN_NODES.find((n) => n.id === activeDesignNode) || DESIGN_NODES[0];
 
   return (
-    <div
-      ref={containerRef}
-      className="relative z-10 py-[var(--space)]"
-    >
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div
-          ref={headerRef}
-          className={cn(
-            "mb-16 md:mb-24 space-y-4 opacity-0 transition-opacity duration-1000",
-            headerVisible && "animate-fade-in opacity-100"
-          )}
-        >
-          <span className="text-label text-primary">Capabilities</span>
-          <h2 className="text-heading text-foreground">
+    <div className="relative z-10 py-16 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        {/* Section Header */}
+        <div className="mb-12 md:mb-16 space-y-3">
+          <span className="text-label text-primary uppercase tracking-widest font-mono text-xs">
+            Architecture & Capabilities
+          </span>
+          <h2 className="text-heading text-foreground tracking-tight">
             My Lab
           </h2>
+          <p className="text-body text-muted-foreground max-w-2xl text-sm sm:text-base">
+            Interactive system architecture and core competencies. Scan the pipeline stages below, or explore verified case studies.
+          </p>
         </div>
 
-        <div className="space-y-12 md:space-y-24">
-          {skills.map((skill, index) => {
-            const isEven = index % 2 === 0;
-            const itemOffset = scrollOffset * 1.0; // Consistent parallax intensity for all cards
-            const isCardVisible = visibleIndices.has(index);
-
-            return (
-              <div
-                key={index}
-                className={cn(
-                  "relative flex flex-col items-center",
-                  isEven ? "lg:flex-row" : "lg:flex-row-reverse"
-                )}
-              >
-                <div
-                  className={cn(
-                    "absolute -z-10 select-none pointer-events-none opacity-[0.03] font-heading font-black leading-none transition-transform duration-500 ease-out will-change-transform text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] text-foreground",
-                    isEven ? "left-[10%] lg:left-[55%]" : "right-[-3%] lg:right-[45%]"
-                  )}
-                  style={{ transform: `translateY(${itemOffset}px)` }}
-                >
-                  {skill.bgTitle}
+        {/* ── 3 SCANNABLE CAPABILITY CARDS (Scan-First) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-16 md:mb-24">
+          {CAPABILITIES.map((cap, idx) => (
+            <div
+              key={idx}
+              className="relative rounded-2xl bg-white border border-border p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-primary/50 group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                    {cap.icon}
+                  </div>
+                  <div className="text-right">
+                    <span className="block text-2xl font-bold font-mono text-primary">
+                      {cap.stat}
+                    </span>
+                    <span className="block text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                      {cap.statLabel}
+                    </span>
+                  </div>
                 </div>
 
-                <SkillCard
-                  skill={skill}
-                  index={index}
-                  isEven={isEven}
-                  isVisible={isCardVisible}
-                  cardRef={(el) => { cardRefs.current[index] = el; }}
-                />
+                <h3 className="text-xl font-bold text-foreground mb-3">
+                  {cap.title}
+                </h3>
 
-                <div className="hidden lg:block lg:w-2/5"></div>
+                {/* Scannable one-line outcome (Max 12 words) */}
+                <p className="text-sm text-foreground/80 font-medium leading-relaxed mb-6">
+                  {cap.outcome}
+                </p>
+
+                {/* 3-5 Tool Chips */}
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {cap.tools.map((t, ti) => (
+                    <Badge
+                      key={ti}
+                      variant="capsule"
+                      className="bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200 text-xs py-1 px-3"
+                    >
+                      {t}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-            );
-          })}
+
+              {/* One "See proof →" link to matching Vault project */}
+              <div className="pt-4 border-t border-border">
+                <Link
+                  href={cap.proofHref}
+                  className="inline-flex items-center gap-2 text-primary hover:text-blue-700 font-semibold text-sm group-hover:gap-3 transition-all"
+                  aria-label={`See proof for ${cap.title}`}
+                >
+                  <span>See proof</span>
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── INTERACTIVE STACK DIAGRAM (3D Cyber Style) ── */}
+        <div className="rounded-2xl bg-[#080B14] border border-blue-900/40 p-6 md:p-10 shadow-2xl relative overflow-hidden">
+          {/* Ambient Glow Effects */}
+          <div
+            className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"
+            aria-hidden="true"
+          />
+          <div
+            className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"
+            aria-hidden="true"
+          />
+
+          <div className="relative z-10 space-y-10">
+            {/* Diagram Header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-widest text-blue-400">
+                  Interactive Pipeline Architecture
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
+                  Full-Cycle DevOps & Design Flow
+                </h3>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Hover any node for details</span>
+              </div>
+            </div>
+
+            {/* Row 1: DevOps Nodes */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono text-blue-400 uppercase tracking-wider">
+                <span>01. DevOps Delivery Pipeline</span>
+                <span className="text-slate-400 hidden sm:inline">Source → Deploy</span>
+              </div>
+
+              <div
+                role="tablist"
+                aria-label="DevOps Delivery Stages"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3"
+              >
+                {DEVOPS_NODES.map((node) => {
+                  const isActive = activeDevopsNode === node.id;
+                  return (
+                    <button
+                      key={node.id}
+                      role="tab"
+                      aria-selected={isActive}
+                      tabIndex={0}
+                      onClick={() => setActiveDevopsNode(node.id)}
+                      onMouseEnter={() => setActiveDevopsNode(node.id)}
+                      className={cn(
+                        "group relative flex flex-col items-start p-3.5 rounded-xl border transition-all duration-200 text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                        isActive
+                          ? "bg-blue-950/50 border-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.25)] translate-y-[-2px]"
+                          : "bg-white/[0.03] border-white/10 hover:border-blue-500/50 hover:bg-white/[0.06]"
+                      )}
+                    >
+                      <div className="flex items-center justify-between w-full mb-2">
+                        <div className={cn("p-1.5 rounded-lg", isActive ? "bg-blue-600/30" : "bg-white/5")}>
+                          {node.icon}
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-400 group-hover:text-blue-300">
+                          {node.id.toUpperCase()}
+                        </span>
+                      </div>
+                      <span className="text-sm font-semibold text-white group-hover:text-blue-200">
+                        {node.label}
+                      </span>
+                      <span className="text-xs text-blue-400/90 font-mono mt-0.5 truncate w-full">
+                        {node.tool}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* DevOps Active Detail Card */}
+              <div className="p-4 rounded-xl bg-blue-950/30 border border-blue-900/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
+                    {selectedDevops.icon}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-white">
+                      {selectedDevops.label} ({selectedDevops.tool}):
+                    </span>{" "}
+                    <span className="text-slate-300">{selectedDevops.desc}</span>
+                  </div>
+                </div>
+                <Link
+                  href="/cicd-pipeline-ml-app"
+                  className="shrink-0 text-blue-400 hover:text-blue-300 font-mono text-xs flex items-center gap-1.5 group font-medium"
+                >
+                  <span>See Pipeline Proof</span>
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Row 2: Design Nodes */}
+            <div className="space-y-3 pt-4 border-t border-white/10">
+              <div className="flex items-center justify-between text-xs font-mono text-indigo-400 uppercase tracking-wider">
+                <span>02. UI/UX Design Lifecycle</span>
+                <span className="text-slate-400 hidden sm:inline">Research → Handoff</span>
+              </div>
+
+              <div
+                role="tablist"
+                aria-label="UI/UX Design Lifecycle Stages"
+                className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3"
+              >
+                {DESIGN_NODES.map((node) => {
+                  const isActive = activeDesignNode === node.id;
+                  return (
+                    <button
+                      key={node.id}
+                      role="tab"
+                      aria-selected={isActive}
+                      tabIndex={0}
+                      onClick={() => setActiveDesignNode(node.id)}
+                      onMouseEnter={() => setActiveDesignNode(node.id)}
+                      className={cn(
+                        "group relative flex flex-col items-start p-3.5 rounded-xl border transition-all duration-200 text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
+                        isActive
+                          ? "bg-indigo-950/50 border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.25)] translate-y-[-2px]"
+                          : "bg-white/[0.03] border-white/10 hover:border-indigo-500/50 hover:bg-white/[0.06]"
+                      )}
+                    >
+                      <div className="flex items-center justify-between w-full mb-2">
+                        <div className={cn("p-1.5 rounded-lg", isActive ? "bg-indigo-600/30" : "bg-white/5")}>
+                          {node.icon}
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-400 group-hover:text-indigo-300">
+                          {node.id.toUpperCase()}
+                        </span>
+                      </div>
+                      <span className="text-sm font-semibold text-white group-hover:text-indigo-200">
+                        {node.label}
+                      </span>
+                      <span className="text-xs text-indigo-400/90 font-mono mt-0.5 truncate w-full">
+                        {node.tool}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Design Active Detail Card */}
+              <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-900/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-400">
+                    {selectedDesign.icon}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-white">
+                      {selectedDesign.label} ({selectedDesign.tool}):
+                    </span>{" "}
+                    <span className="text-slate-300">{selectedDesign.desc}</span>
+                  </div>
+                </div>
+                <Link
+                  href="/preed-financial-intelligence"
+                  className="shrink-0 text-indigo-400 hover:text-indigo-300 font-mono text-xs flex items-center gap-1.5 group font-medium"
+                >
+                  <span>See Design Proof</span>
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-transparent via-border to-transparent -z-20"></div>
     </div>
   );
 };

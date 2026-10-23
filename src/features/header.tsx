@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Menu, X } from 'lucide-react';
+import { cn } from '@/shared/lib/utils';
 
 /**
  * @fileOverview High-fidelity navigation bar with organic "liquid" concave curves.
@@ -13,8 +14,10 @@ import { ArrowRight, Menu, X } from 'lucide-react';
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('hero');
 
   const handleHeroClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    setActiveSection('hero');
     if (window.location.pathname === '/') {
       e.preventDefault();
       if (window.__lenis) {
@@ -28,7 +31,105 @@ export const Header = () => {
     }
   };
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    setActiveSection(targetId);
+    if (window.location.pathname === '/') {
+      const el = document.getElementById(targetId);
+      if (el) {
+        e.preventDefault();
+        if (window.__lenis) {
+          window.__lenis.scrollTo(el, { offset: -20 });
+        } else {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+        window.history.replaceState(null, '', `/#${targetId}`);
+      }
+    }
+  };
+
+  const handleMobileNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    setActiveSection(targetId);
+    closeMobileMenu();
+    if (window.location.pathname === '/') {
+      if (targetId === 'hero') {
+        e.preventDefault();
+        if (window.__lenis) {
+          window.__lenis.scrollTo(0);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (window.location.hash) {
+          window.history.replaceState(null, '', '/');
+        }
+        return;
+      }
+      const el = document.getElementById(targetId);
+      if (el) {
+        e.preventDefault();
+        if (window.__lenis) {
+          window.__lenis.scrollTo(el, { offset: -20 });
+        } else {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+        window.history.replaceState(null, '', `/#${targetId}`);
+      }
+    }
+  };
+
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const updateActiveSection = () => {
+      if (window.location.pathname !== '/') return;
+
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+
+      // Bottom snap: activate contact when near or at the bottom
+      if (windowHeight + scrollY >= docHeight - 140) {
+        setActiveSection('contact');
+        return;
+      }
+
+      // Top snap: activate hero when near the top
+      if (scrollY < windowHeight * 0.35) {
+        setActiveSection('hero');
+        return;
+      }
+
+      // Check sections in reverse DOM order (contact, vault, lab, about)
+      const sections = ['contact', 'vault', 'lab', 'about'];
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= windowHeight * 0.45 && rect.bottom > 80) {
+            setActiveSection(id);
+            return;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', updateActiveSection, { passive: true });
+    updateActiveSection();
+
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['about', 'lab', 'vault', 'contact'].includes(hash)) {
+        setActiveSection(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveSection);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   // Generate randomized positions and animation params for mobile bubbles
   const [bubblePositions, setBubblePositions] = useState<
@@ -143,25 +244,56 @@ export const Header = () => {
           <div className="hidden md:flex items-center gap-10 flex-1 justify-end pr-12">
             <Link 
               href="/#about" 
-              className="text-[#94A3B8] text-nav hover:text-[#2563EB] transition-all duration-500 ease-out"
+              onClick={(e) => handleNavClick(e, 'about')}
+              className={cn(
+                "relative py-1 text-nav transition-all duration-300 ease-out",
+                activeSection === 'about'
+                  ? "text-[#2563EB] font-medium"
+                  : "text-[#94A3B8] hover:text-[#2563EB]"
+              )}
+              aria-current={activeSection === 'about' ? 'page' : undefined}
             >
               About
+              <span
+                className={cn(
+                  "absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2563EB] rounded-full transition-all duration-300 ease-out pointer-events-none",
+                  activeSection === 'about' ? "w-full opacity-100 scale-x-100" : "w-0 opacity-0 scale-x-0"
+                )}
+                style={{ transformOrigin: 'center' }}
+              />
             </Link>
             <Link 
               href="/#lab" 
-              className="text-[#94A3B8] text-nav hover:text-[#2563EB] transition-all duration-500 ease-out"
+              onClick={(e) => handleNavClick(e, 'lab')}
+              className={cn(
+                "relative py-1 text-nav transition-all duration-300 ease-out",
+                activeSection === 'lab'
+                  ? "text-[#2563EB] font-medium"
+                  : "text-[#94A3B8] hover:text-[#2563EB]"
+              )}
+              aria-current={activeSection === 'lab' ? 'page' : undefined}
             >
               My Lab
+              <span
+                className={cn(
+                  "absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2563EB] rounded-full transition-all duration-300 ease-out pointer-events-none",
+                  activeSection === 'lab' ? "w-full opacity-100 scale-x-100" : "w-0 opacity-0 scale-x-0"
+                )}
+                style={{ transformOrigin: 'center' }}
+              />
             </Link>
           </div>
 
           {/* Center Logo Branding - Click to navigate/scroll to Hero */}
           <div className="relative flex items-center justify-center px-1 sm:px-4 md:px-10">
-            <Link href="/" onClick={handleHeroClick} className="group flex flex-col items-center cursor-pointer">
+            <Link href="/" onClick={handleHeroClick} className="group flex flex-col items-center cursor-pointer" aria-label="KM - Khush Makwana Home">
               <div className="flex items-baseline gap-0.5 relative">
-                  <span className="text-lg sm:text-xl md:text-2xl font-semibold text-[#F5F5F7] tracking-tighter font-heading">K</span>
+                <span className="text-lg sm:text-xl md:text-2xl font-semibold text-[#F5F5F7] tracking-tighter font-heading">K</span>
                 <span className="text-lg sm:text-xl md:text-2xl font-semibold text-[#2563EB] tracking-tighter font-heading">M</span>
-                <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#2563EB] group-hover:w-full transition-all duration-700 ease-in-out"></div>
+                <div className={cn(
+                  "absolute -bottom-1 left-0 h-[2px] bg-[#2563EB] transition-all duration-500 ease-in-out",
+                  activeSection === 'hero' ? "w-full" : "w-0 group-hover:w-full"
+                )}></div>
               </div>
             </Link>
           </div>
@@ -170,15 +302,43 @@ export const Header = () => {
           <div className="hidden md:flex items-center gap-10 flex-1 justify-start pl-12">
             <Link 
               href="/#vault" 
-              className="text-[#94A3B8] text-nav hover:text-[#2563EB] transition-all duration-500 ease-out"
+              onClick={(e) => handleNavClick(e, 'vault')}
+              className={cn(
+                "relative py-1 text-nav transition-all duration-300 ease-out",
+                activeSection === 'vault'
+                  ? "text-[#2563EB] font-medium"
+                  : "text-[#94A3B8] hover:text-[#2563EB]"
+              )}
+              aria-current={activeSection === 'vault' ? 'page' : undefined}
             >
               My Vault
+              <span
+                className={cn(
+                  "absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2563EB] rounded-full transition-all duration-300 ease-out pointer-events-none",
+                  activeSection === 'vault' ? "w-full opacity-100 scale-x-100" : "w-0 opacity-0 scale-x-0"
+                )}
+                style={{ transformOrigin: 'center' }}
+              />
             </Link>
             <Link 
               href="/#contact" 
-              className="text-[#94A3B8] text-nav hover:text-[#2563EB] transition-all duration-500 ease-out"
+              onClick={(e) => handleNavClick(e, 'contact')}
+              className={cn(
+                "relative py-1 text-nav transition-all duration-300 ease-out",
+                activeSection === 'contact'
+                  ? "text-[#2563EB] font-medium"
+                  : "text-[#94A3B8] hover:text-[#2563EB]"
+              )}
+              aria-current={activeSection === 'contact' ? 'page' : undefined}
             >
               Contact
+              <span
+                className={cn(
+                  "absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2563EB] rounded-full transition-all duration-300 ease-out pointer-events-none",
+                  activeSection === 'contact' ? "w-full opacity-100 scale-x-100" : "w-0 opacity-0 scale-x-0"
+                )}
+                style={{ transformOrigin: 'center' }}
+              />
             </Link>
           </div>
 
@@ -266,23 +426,38 @@ export const Header = () => {
                     <nav>
                       <ul className="space-y-3">
                         {[
-                          { label: 'Home', href: '/' },
-                          { label: 'About', href: '/#about' },
-                          { label: 'My Lab', href: '/#lab' },
-                          { label: 'My Vault', href: '/#vault' },
-                          { label: 'Contact', href: '/#contact' },
-                        ].map((item) => (
-                          <li key={item.label}>
-                            <Link
-                              href={item.href}
-                              onClick={closeMobileMenu}
-                              className="flex w-full items-center justify-between gap-3 text-left py-3 px-4 rounded-lg side-menu-item"
-                            >
-                              <span className="text-label">{item.label}</span>
-                              <ArrowRight className="h-3.5 w-3.5 shrink-0 text-[#94A3B8]" strokeWidth={2.5} />
-                            </Link>
-                          </li>
-                        ))}
+                          { id: 'hero', label: 'Home', href: '/' },
+                          { id: 'about', label: 'About', href: '/#about' },
+                          { id: 'lab', label: 'My Lab', href: '/#lab' },
+                          { id: 'vault', label: 'My Vault', href: '/#vault' },
+                          { id: 'contact', label: 'Contact', href: '/#contact' },
+                        ].map((item) => {
+                          const isActive = activeSection === item.id;
+                          return (
+                            <li key={item.label}>
+                              <Link
+                                href={item.href}
+                                onClick={(e) => handleMobileNavClick(e, item.id)}
+                                className={cn(
+                                  "flex w-full items-center justify-between gap-3 text-left py-3 px-4 rounded-lg side-menu-item transition-all duration-300",
+                                  isActive
+                                    ? "bg-[#2563EB]/15 text-[#2563EB] font-semibold border-l-2 border-[#2563EB]"
+                                    : "text-[#94A3B8] hover:text-[#2563EB] hover:bg-white/5"
+                                )}
+                                aria-current={isActive ? 'page' : undefined}
+                              >
+                                <span className={cn("text-label", isActive && "text-[#2563EB] font-semibold")}>{item.label}</span>
+                                <ArrowRight
+                                  className={cn(
+                                    "h-3.5 w-3.5 shrink-0 transition-transform duration-300",
+                                    isActive ? "text-[#2563EB] translate-x-1" : "text-[#94A3B8]"
+                                  )}
+                                  strokeWidth={2.5}
+                                />
+                              </Link>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </nav>
 

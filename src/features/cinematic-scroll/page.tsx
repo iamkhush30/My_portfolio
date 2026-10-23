@@ -2,152 +2,157 @@
 
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Badge } from "@/shared/ui/badge";
+import { PROJECTS, ProjectItem } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SECTIONS = [
-    {
-        title: "CI/CD Pipeline Analytics",
-        tagline: "CI/CD Pipeline",
-        description:
-            "A real-time dashboard visualizing pipeline health, deployment frequency, and failure rates — turning DevOps telemetry into actionable engineering insight.",
-        image: "/assets/CICD-Pipeline.png",
-        href: "/cicd-pipeline-analytics",
-    },
-    {
-        title: "Preed · Financial Intelligence",
-        tagline: "UI/UX Case Study",
-        description:
-            "A full-featured AI-powered stock prediction web application — combining algorithmic signal analysis, portfolio tracking, and multi-stock comparison into a single, data-dense dashboard for retail investors.",
-        image:
-            "/assets/preed.png",
-        href: "/preed-financial-intelligence",
-    },
-    {
-        title: "Online Electronics Store",
-        tagline: "E-Commerce",
-        description:
-            "A high-conversion storefront designed with behavioral science principles — precision-crafted product flows, micro-interactions, and a performance-first architecture.",
-        image:
-            "/assets/Electronic-Store.png",
-        href: "/online-electronics-store",
-    },
-];
-
 export default function LayeredPanelReveal() {
-    const sectionRef = useRef<HTMLDivElement>(null);
-    const cardsRef = useRef<HTMLDivElement[]>([]);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
 
-    useEffect(() => {
-        const cards = cardsRef.current;
-        const total = cards.length;
+  useEffect(() => {
+    // Respect prefers-reduced-motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
 
-        cards.forEach((card, i) => {
-            gsap.set(card, {
-                yPercent: i === 0 ? 0 : 100,
-                zIndex: i,
-            });
-        });
+    const cards = cardsRef.current.filter(Boolean);
+    const total = cards.length;
+    if (total === 0) return;
 
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top top",
-                end: `+=${(total - 1) * window.innerHeight}`,
-                scrub: 0.6,
-                pin: true,
-                anticipatePin: 1,
-            },
-        });
+    cards.forEach((card, i) => {
+      gsap.set(card, {
+        yPercent: i === 0 ? 0 : 100,
+        zIndex: i,
+      });
+    });
 
-        cards.forEach((_, i) => {
-            if (i === total - 1) return;
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top top",
+        end: `+=${(total - 1) * window.innerHeight}`,
+        scrub: 0.6,
+        pin: true,
+        anticipatePin: 1,
+      },
+    });
 
-            tl.set(cards[i + 1], { zIndex: total + i });
+    cards.forEach((_, i) => {
+      if (i === total - 1) return;
 
-            tl.to(cards[i + 1], {
-                yPercent: 0,
-                ease: "power3.inOut",
-            }).to(
-                cards[i],
-                {
-                    scale: 0.92,
-                    opacity: 0.85,
-                },
-                "<"
-            );
-        });
+      tl.set(cards[i + 1], { zIndex: total + i });
 
-        ScrollTrigger.refresh();
+      tl.to(cards[i + 1], {
+        yPercent: 0,
+        ease: "power3.inOut",
+      }).to(
+        cards[i],
+        {
+          scale: 0.92,
+          opacity: 0.85,
+        },
+        "<"
+      );
+    });
 
-        return () => {
-            ScrollTrigger.getAll().forEach((st) => st.kill());
-        };
-    }, []);
+    ScrollTrigger.refresh();
 
-    return (
-        <section
-            ref={sectionRef}
-            className="relative w-full"
-            style={{ height: "100vh" }}
+    return () => {
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative w-full"
+      style={{ height: "100vh" }}
+      aria-labelledby="vault-heading"
+    >
+      <div className="absolute top-0 left-0 w-full z-20 px-4 sm:px-6 md:px-12 pt-8">
+        <div className="max-w-6xl mx-auto">
+          <span className="text-label text-primary uppercase tracking-widest font-mono text-xs">
+            Selected Archive
+          </span>
+          <h2 id="vault-heading" className="text-heading text-foreground mt-2">
+            My Vault
+          </h2>
+        </div>
+      </div>
+
+      {PROJECTS.map((project, i) => (
+        <div
+          key={project.id}
+          ref={(el) => {
+            if (el) cardsRef.current[i] = el;
+          }}
+          className="absolute inset-0 flex items-start justify-center px-4 sm:px-6 pt-[180px] sm:pt-[220px]"
         >
-            <div className="absolute top-0 left-0 w-full z-20 px-6 md:px-12 pt-8">
-                <div className="max-w-6xl mx-auto">
-                    <span className="text-label text-primary">Selected Archive</span>
-                    <h2 className="text-heading text-foreground mt-4">My Vault</h2>
-                </div>
-            </div>
-
-            {SECTIONS.map((section, i) => (
-                <div
-                    key={i}
-                    ref={(el) => {
-                        if (el) cardsRef.current[i] = el;
-                    }}
-                    className="absolute inset-0 flex items-start justify-center px-6 pt-[220px]"
-                >
-                    <Card section={section} />
-                </div>
-            ))}
-        </section>
-    );
+          <Card project={project} />
+        </div>
+      ))}
+    </section>
+  );
 }
 
-function Card({ section }: any) {
-    return (
-        <Link
-            href={section.href}
-            className="w-full max-w-[1100px] h-[clamp(200px,60vh,520px)] md:h-[clamp(440px,55vh,520px)] rounded-2xl bg-white shadow-xl overflow-hidden grid lg:grid-cols-[1.05fr_1fr]"
-        >
-            <div className="p-8 lg:p-10 flex flex-col">
-                <span className="text-sm uppercase tracking-widest text-gray-400">
-                    {section.tagline}
-                </span>
+function Card({ project }: { project: ProjectItem }) {
+  return (
+    <Link
+      href={`/${project.slug}`}
+      className="w-full max-w-[1100px] h-[clamp(240px,60vh,520px)] md:h-[clamp(440px,55vh,520px)] rounded-2xl bg-white shadow-xl overflow-hidden grid lg:grid-cols-[1.05fr_1fr] border border-border group hover:border-primary/50 transition-colors"
+    >
+      <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs uppercase tracking-widest font-mono text-primary font-bold">
+              {project.category}
+            </span>
+            <span className="text-xs font-mono text-muted-foreground opacity-60">·</span>
+            <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
+              {project.tagline}
+            </span>
+          </div>
 
-                <h2 className="mt-4 text-[clamp(30px,3.8vw,44px)] font-extrabold leading-tight text-slate-900">
-                    {section.title}
-                </h2>
+          <h3 className="mt-2 text-[clamp(22px,3.2vw,40px)] font-extrabold leading-tight text-slate-900 group-hover:text-primary transition-colors">
+            {project.title}
+          </h3>
 
-                <p className="mt-6 text-gray-500 max-w-[560px]">{section.description}</p>
+          <p className="mt-4 text-xs sm:text-sm text-slate-600 max-w-[560px] line-clamp-3 sm:line-clamp-4 leading-relaxed">
+            {project.summary}
+          </p>
+        </div>
 
-                <div className="mt-auto flex items-center gap-3">
-                    <Badge variant="capsule">CASE STUDY</Badge>
-                    <Badge variant="capsule">LIVE PREVIEW</Badge>
-                </div>
-            </div>
+        <div className="mt-6 flex flex-wrap items-center gap-2.5">
+          <Badge variant="capsule" className="bg-slate-900 text-white border-slate-900 text-[11px] font-mono">
+            CASE STUDY
+          </Badge>
+          {project.hasLivePreview && (
+            <Badge variant="capsule" className="bg-emerald-50 text-emerald-700 border-emerald-300 text-[11px] font-mono">
+              LIVE PREVIEW
+            </Badge>
+          )}
+          {project.isDraftSlot && (
+            <Badge variant="capsule" className="bg-blue-50 text-blue-700 border-blue-200 text-[11px] font-mono">
+              DEVOPS SLOT
+            </Badge>
+          )}
+        </div>
+      </div>
 
-            <div className="relative">
-                <div className="absolute inset-0 w-full h-full">
-                    <img
-                        src={section.image}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        aria-hidden
-                    />
-                </div>
-            </div>
-        </Link>
-    );
+      <div className="relative hidden sm:block bg-slate-950 overflow-hidden">
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          sizes="(max-width: 1024px) 50vw, 550px"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      </div>
+    </Link>
+  );
 }
