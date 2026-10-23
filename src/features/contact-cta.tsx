@@ -16,13 +16,13 @@ export const ContactCTA = () => {
       <div className="flex items-center gap-2">
         <Mail size={14} className="text-primary" aria-hidden="true" />
         <span className="text-label group-hover:text-primary transition-colors duration-500 font-mono text-xs uppercase tracking-widest">
-          Initiate Contact
+          Get In Touch
         </span>
       </div>
 
       {/* Main Narrative Heading & Icon */}
       <h2 className="text-heading text-foreground group-hover:text-primary transition-colors duration-500 text-center flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-6 max-w-[1400px] leading-tight px-2 sm:px-0">
-        Let's Build Something Resilient
+        Have an opportunity? Let's talk
 
         {/* Interactive Icon Component */}
         <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 shrink-0">

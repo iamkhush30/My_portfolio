@@ -36,20 +36,20 @@ export const Footer: React.FC = () => {
   const dayDate =
     mounted && currentTime
       ? new Intl.DateTimeFormat("en-GB", {
-          weekday: "long",
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-          timeZone: "Asia/Kolkata",
-        }).format(currentTime)
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        timeZone: "Asia/Kolkata",
+      }).format(currentTime)
       : "Active System";
 
   const timeZoneLabel =
     mounted && currentTime
       ? new Intl.DateTimeFormat("en-US", {
-          timeZone: "Asia/Kolkata",
-          timeZoneName: "short",
-        }).formatToParts(currentTime).find((part) => part.type === "timeZoneName")?.value ?? "IST"
+        timeZone: "Asia/Kolkata",
+        timeZoneName: "short",
+      }).formatToParts(currentTime).find((part) => part.type === "timeZoneName")?.value ?? "IST"
       : "IST (Asia/Kolkata)";
 
   return (
@@ -66,10 +66,10 @@ export const Footer: React.FC = () => {
         {/* Col 1 — Brand */}
         <div className="footer-box min-h-[180px] md:min-h-[320px] px-[var(--space-md)] py-[var(--space-lg)] sm:px-[var(--space-lg)] sm:py-[var(--space-xl)]">
           <p className="text-heading text-[var(--dark-text)]">
-            Let's Connect
+            Khush Makwana
           </p>
           <p className="text-body text-[var(--dark-text-muted)] mt-[var(--space-md)] max-w-[320px]">
-            Actively seeking Cloud & DevOps engineering opportunities to build automated pipelines, resilient cloud architecture, and high-impact infrastructure.
+            Specializing in AWS cloud infrastructure, automated CI/CD pipelines, and intuitive design systems. Open to engineering roles and ambitious collaborations.
           </p>
           <div className="mt-4 pt-3 border-t border-white/5">
             <a
