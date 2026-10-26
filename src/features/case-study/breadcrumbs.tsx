@@ -38,25 +38,25 @@ export const Breadcrumbs: React.FC<BreadcrumbProps> = ({ projectTitle, projectSl
   };
 
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-8 sm:mb-12">
+    <nav aria-label="Breadcrumb" className="flex items-center flex-wrap gap-1.5 sm:gap-2 text-xs font-mono text-muted-foreground mb-6 sm:mb-10 md:mb-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Link
         href="/"
-        className="flex items-center gap-1 hover:text-primary transition-colors"
+        className="flex items-center gap-1 hover:text-primary transition-colors shrink-0"
         aria-label="Home"
       >
         <Home size={13} aria-hidden="true" />
         <span className="hidden sm:inline">Home</span>
       </Link>
-      <ChevronRight size={12} className="opacity-40" aria-hidden="true" />
-      <Link href="/#vault" className="hover:text-primary transition-colors">
+      <ChevronRight size={12} className="opacity-40 shrink-0" aria-hidden="true" />
+      <Link href="/#vault" className="hover:text-primary transition-colors shrink-0">
         My Vault
       </Link>
-      <ChevronRight size={12} className="opacity-40" aria-hidden="true" />
-      <span className="text-foreground font-medium truncate max-w-[130px] sm:max-w-none" aria-current="page">
+      <ChevronRight size={12} className="opacity-40 shrink-0" aria-hidden="true" />
+      <span className="text-foreground font-medium truncate max-w-[150px] xs:max-w-[220px] sm:max-w-none" aria-current="page">
         {projectTitle}
       </span>
     </nav>

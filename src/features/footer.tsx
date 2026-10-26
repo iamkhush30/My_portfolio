@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { siteConfig } from "@/shared/lib/site-config";
 
 const NAV_LINKS = [
   { label: "About", href: "/#about" },
   { label: "My Lab", href: "/#lab" },
   { label: "Vault", href: "/#vault" },
-  { label: "Resume", href: "/Khush_Makwana_Resume.pdf", external: true },
+  { label: "Resume", href: siteConfig.links.resume, external: true },
 ];
 
 const SOCIAL_LINKS = [

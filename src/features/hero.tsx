@@ -6,10 +6,10 @@ import "./hero.css";
 
 /* ─── CMD lines ─── */
 const CMD_LINES: { prefix: string; cmd: string; out: string; cls: string }[] = [
-  { prefix: "$", cmd: " kubectl apply -f deploy.yml",       out: "✓ deployment.apps/portfolio created", cls: "tp" },
-  { prefix: "",  cmd: "",                                    out: "✓ pods running  3/3",                 cls: "tp" },
-  { prefix: "$", cmd: " figma export --tokens design.json", out: "↳ 42 tokens synced to codebase",      cls: "tw" },
-  { prefix: "$", cmd: ' git commit -m "logic meets art"',   out: "✓ pipeline passing",                  cls: "tp" },
+  { prefix: "$", cmd: " kubectl apply -f deploy.yml", out: "✓ deployment.apps/portfolio created", cls: "tp" },
+  { prefix: "", cmd: "", out: "✓ pods running  3/3", cls: "tp" },
+  { prefix: "$", cmd: " figma export --tokens design.json", out: "↳ 42 tokens synced to codebase", cls: "tw" },
+  { prefix: "$", cmd: ' git commit -m "logic meets art"', out: "✓ pipeline passing", cls: "tp" },
 ];
 
 /* ─── Typewriter hook ─── */
@@ -80,23 +80,23 @@ function useTypewriter(lines: typeof CMD_LINES, active: boolean) {
    MAIN COMPONENT
 ═══════════════════════════════════════════════════ */
 export const Hero = () => {
-  const stageRef  = useRef<HTMLDivElement>(null);
-  const wireRef   = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const wireRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  const pctRef   = useRef(0);   // starts at 0 (left edge)
+  const pctRef = useRef(0);   // starts at 0 (left edge)
   const dragging = useRef(false);
   const introRaf = useRef(0);
-  const dragRaf  = useRef(0);
+  const dragRaf = useRef(0);
 
-  const [hintGone,  setHintGone]  = useState(false);
+  const [hintGone, setHintGone] = useState(false);
   const [cmdActive, setCmdActive] = useState(false);
 
-  const cmdLines   = useTypewriter(CMD_LINES, cmdActive);
+  const cmdLines = useTypewriter(CMD_LINES, cmdActive);
   const showCursor = cmdLines.length > 0 && cmdLines[cmdLines.length - 1]?.outDone;
 
-  const pauseLenis  = useCallback(() => { try { (window as any).__lenis?.stop();  } catch {} }, []);
-  const resumeLenis = useCallback(() => { try { (window as any).__lenis?.start(); } catch {} }, []);
+  const pauseLenis = useCallback(() => { try { (window as any).__lenis?.stop(); } catch { } }, []);
+  const resumeLenis = useCallback(() => { try { (window as any).__lenis?.start(); } catch { } }, []);
 
   const introStartPct = 100;
   const introHoldMs = 220;
@@ -105,11 +105,11 @@ export const Hero = () => {
   const applyPct = useCallback((p: number) => {
     const c = Math.max(0, Math.min(100, p));
     pctRef.current = c;
-    const wire   = wireRef.current;
+    const wire = wireRef.current;
     const slider = sliderRef.current;
     if (!wire || !slider) return;
     wire.style.clipPath = `inset(0 ${c.toFixed(3)}% 0 0)`;
-    slider.style.left   = `${(100 - c).toFixed(3)}%`;
+    slider.style.left = `${(100 - c).toFixed(3)}%`;
   }, []);
 
   const easeSmooth = (t: number) => 0.5 - 0.5 * Math.cos(Math.PI * t);
@@ -148,14 +148,14 @@ export const Hero = () => {
   const animateTo = useCallback(
     (to: number, duration: number, ease: (t: number) => number) =>
       new Promise<boolean>((resolve) => {
-        const from  = pctRef.current;
+        const from = pctRef.current;
         const start = performance.now();
-        const step  = (now: number) => {
+        const step = (now: number) => {
           if (dragging.current) { resolve(false); return; }
           const t = Math.min((now - start) / duration, 1);
           applyPct(from + (to - from) * ease(t));
           if (t < 1) { introRaf.current = requestAnimationFrame(step); }
-          else        { resolve(true); }
+          else { resolve(true); }
         };
         introRaf.current = requestAnimationFrame(step);
       }),
@@ -183,12 +183,12 @@ export const Hero = () => {
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerup",   onPointerUp);
+    window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup",   onPointerUp);
+      window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
     };
   }, [applyPct, resumeLenis]);
@@ -209,71 +209,71 @@ export const Hero = () => {
         await new Promise<void>((res) => window.addEventListener('load', () => res(), { once: true }));
       }
 
-        // Wait for fonts to be ready (if supported) so text paints before animation
-        try { if ((document as any).fonts && (document as any).fonts.ready) await (document as any).fonts.ready; } catch {}
+      // Wait for fonts to be ready (if supported) so text paints before animation
+      try { if ((document as any).fonts && (document as any).fonts.ready) await (document as any).fonts.ready; } catch { }
 
-        // Give the browser two frames to paint all details
-        await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
-        if (cancelled) return;
+      // Give the browser two frames to paint all details
+      await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+      if (cancelled) return;
 
-        // Wait for hero detail animations to finish before revealing slider.
-        const animatedSelectors = ['.hero-name', '.hero-left > p.text-label', '.hero-tags', '.hero-tagline', '.hero-text-wrapper', '.hero-availability', '.hero-btns', '.hero-socials', '.hero-terminal'];
-        const elements: Element[] = [];
-        for (const sel of animatedSelectors) elements.push(...Array.from(document.querySelectorAll(sel)));
+      // Wait for hero detail animations to finish before revealing slider.
+      const animatedSelectors = ['.hero-name', '.hero-left > p.text-label', '.hero-tags', '.hero-tagline', '.hero-text-wrapper', '.hero-availability', '.hero-btns', '.hero-socials', '.hero-terminal'];
+      const elements: Element[] = [];
+      for (const sel of animatedSelectors) elements.push(...Array.from(document.querySelectorAll(sel)));
 
-        const waitForAnimations = (els: Element[]) => Promise.all(
-          els.map((el) => new Promise<void>((res) => {
-            try {
-              const anims = (el as any).getAnimations ? (el as any).getAnimations() : [];
-              if (!anims || anims.length === 0) {
-                const cs = getComputedStyle(el as Element);
-                if (cs && cs.animationName === 'none') return res();
-              }
-
-              // If all animations already finished, resolve immediately
-              if (anims.length > 0 && anims.every((a: any) => a.playState === 'finished')) return res();
-
-              // Otherwise attach finish handlers with a timeout fallback
-              let finished = false;
-              const onFinish = () => {
-                if (finished) return;
-                const now = (el as any).getAnimations ? (el as any).getAnimations() : [];
-                if (now.length === 0 || now.every((a: any) => a.playState === 'finished')) {
-                  finished = true;
-                  cleanup();
-                  res();
-                }
-              };
-
-              const handlers: any[] = [];
-              for (const a of anims) {
-                if (a.finished || a.playState === 'finished') continue;
-                a.onfinish = onFinish;
-                handlers.push(a);
-              }
-
-              const fallback = setTimeout(() => { if (!finished) { finished = true; cleanup(); res(); } }, 2500);
-              function cleanup() { for (const h of handlers) h.onfinish = null; clearTimeout(fallback); }
-
-              // In case there were no handlers attached (animations already finished), resolve
-              if (handlers.length === 0) { cleanup(); res(); }
-            } catch (e) {
-              // If anything goes wrong, don't block — resolve
-              res();
+      const waitForAnimations = (els: Element[]) => Promise.all(
+        els.map((el) => new Promise<void>((res) => {
+          try {
+            const anims = (el as any).getAnimations ? (el as any).getAnimations() : [];
+            if (!anims || anims.length === 0) {
+              const cs = getComputedStyle(el as Element);
+              if (cs && cs.animationName === 'none') return res();
             }
-          }))
-        );
 
-        try { await waitForAnimations(elements); } catch {}
-        if (cancelled) return;
+            // If all animations already finished, resolve immediately
+            if (anims.length > 0 && anims.every((a: any) => a.playState === 'finished')) return res();
 
-        // Add delay before slider animation
-        await new Promise((res) => setTimeout(res, 1000));
-        if (cancelled) return;
+            // Otherwise attach finish handlers with a timeout fallback
+            let finished = false;
+            const onFinish = () => {
+              if (finished) return;
+              const now = (el as any).getAnimations ? (el as any).getAnimations() : [];
+              if (now.length === 0 || now.every((a: any) => a.playState === 'finished')) {
+                finished = true;
+                cleanup();
+                res();
+              }
+            };
 
-        await animateTo(target, duration, easeHeadingReveal);
-        if (cancelled) return;
-        setCmdActive(true);
+            const handlers: any[] = [];
+            for (const a of anims) {
+              if (a.finished || a.playState === 'finished') continue;
+              a.onfinish = onFinish;
+              handlers.push(a);
+            }
+
+            const fallback = setTimeout(() => { if (!finished) { finished = true; cleanup(); res(); } }, 2500);
+            function cleanup() { for (const h of handlers) h.onfinish = null; clearTimeout(fallback); }
+
+            // In case there were no handlers attached (animations already finished), resolve
+            if (handlers.length === 0) { cleanup(); res(); }
+          } catch (e) {
+            // If anything goes wrong, don't block — resolve
+            res();
+          }
+        }))
+      );
+
+      try { await waitForAnimations(elements); } catch { }
+      if (cancelled) return;
+
+      // Add delay before slider animation
+      await new Promise((res) => setTimeout(res, 1000));
+      if (cancelled) return;
+
+      await animateTo(target, duration, easeHeadingReveal);
+      if (cancelled) return;
+      setCmdActive(true);
     };
 
     runAfterLoad();
@@ -293,10 +293,10 @@ export const Hero = () => {
       dragging.current = true;
       pauseLenis();
 
-      if (!hintGone)  setHintGone(true);
+      if (!hintGone) setHintGone(true);
       if (!cmdActive) setCmdActive(true);
 
-      try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch { }
 
       if (stageRef.current) {
         const r = stageRef.current.getBoundingClientRect();
@@ -418,12 +418,12 @@ export const Hero = () => {
               </div>
               <div className="wterm-lines" aria-hidden="true">
                 <div className="wterm-line prompt" style={{ width: "88%" }} />
-                <div className="wterm-line"        style={{ width: "72%" }} />
-                <div className="wterm-line"        style={{ width: "58%" }} />
+                <div className="wterm-line" style={{ width: "72%" }} />
+                <div className="wterm-line" style={{ width: "58%" }} />
                 <div className="wterm-line prompt" style={{ width: "80%" }} />
-                <div className="wterm-line"        style={{ width: "68%" }} />
+                <div className="wterm-line" style={{ width: "68%" }} />
                 <div className="wterm-line prompt" style={{ width: "76%" }} />
-                <div className="wterm-line"        style={{ width: "52%" }} />
+                <div className="wterm-line" style={{ width: "52%" }} />
               </div>
             </div>
           </div>
@@ -433,8 +433,8 @@ export const Hero = () => {
       <div className="hero-slider" ref={sliderRef}>
         <div className="slider-handle" onPointerDown={startDrag}>
           <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="6" y="3" width="2.5" height="14" rx="1" fill="#2563EB"/>
-            <rect x="11.5" y="3" width="2.5" height="14" rx="1" fill="#2563EB"/>
+            <rect x="6" y="3" width="2.5" height="14" rx="1" fill="#2563EB" />
+            <rect x="11.5" y="3" width="2.5" height="14" rx="1" fill="#2563EB" />
           </svg>
         </div>
         <div className="slider-hint" style={{ opacity: hintGone ? 0 : 1 }}>
