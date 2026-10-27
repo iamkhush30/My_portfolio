@@ -131,11 +131,11 @@ export const PROJECTS: ProjectItem[] = [
     template: 'devops',
     role: 'DevOps Engineer',
     date: '2024',
-    tools: ['GitLab CI', 'Jenkins', 'Docker', 'Nexus', 'Webhook', 'Shell'],
+    tools: ['GitLab', 'Jenkins', 'Docker', 'Nexus', 'Webhook', 'Bash'],
     summary:
-      'Architected a fully automated CI/CD pipeline for a Machine Learning Heart Disease Prediction application. Automates the full path from developer code push in GitLab, through automated Jenkins builds and unit tests, to Docker image creation and versioned storage in a private Nexus Repository Manager.',
+      'Architected an automated CI delivery pipeline for a Machine Learning Heart Disease Prediction application. Automates the full path from developer code push in GitLab, through automated Jenkins builds and container packaging, to versioned Docker image storage in a private Sonatype Nexus Repository Manager.',
     archivedParagraph:
-      'Built automated pipelines that handle everything from code commit to containerized deployment — including artifact management with Nexus Repository Manager and container orchestration readiness. No manual handoffs, no deployment guesswork. Code that passes tests ships automatically.',
+      'Built automated pipelines that handle everything from code commit to artifact publishing in Sonatype Nexus Repository Manager — eliminating manual handoffs and versioning every Docker image with unique Jenkins build IDs.',
     seoTitle: 'CI/CD Pipeline for ML App | Khush Makwana DevOps Case Study',
     seoDescription:
       'Technical breakdown of a production-style CI/CD pipeline using GitLab, Jenkins, Docker, and Nexus for a Heart Disease Machine Learning Prediction application.',
@@ -145,7 +145,7 @@ export const PROJECTS: ProjectItem[] = [
     metrics: [
       { label: 'Pipeline Automation', value: '100%', note: 'Zero manual handoffs from git commit to registry' },
       { label: 'Target Registry', value: 'Nexus', note: 'Isolated Docker repository with build-ID tags' },
-      { label: 'Artifact Delivery', value: 'Docker', note: 'Immutable multi-stage containerized build' },
+      { label: 'Artifact Delivery', value: 'Nexus', note: 'Versioned container image tagged with Jenkins BUILD_ID' },
     ],
     pipelineFlow: 'GitLab → Jenkins → Docker → Nexus',
     stages: [
@@ -181,7 +181,7 @@ export const PROJECTS: ProjectItem[] = [
         tool: 'Docker',
         detail: 'docker build & tag',
         iconName: 'Box',
-        responsibility: 'Packages application code, ML inference weights, and runtime into an immutable multi-stage container image.',
+        responsibility: 'Packages application code, ML inference weights, and runtime into a lean single-stage container image based on python:3.11-slim.',
         command: 'docker build -t heart-predict:${BUILD_ID} .',
         guardrail: 'Tags every container with unique Jenkins ${BUILD_ID} to prevent tag overwrite collisions.',
       },
@@ -206,7 +206,7 @@ export const PROJECTS: ProjectItem[] = [
     infrastructureSpecs: [
       {
         category: 'Application Stack',
-        items: ['Frontend: React application', 'Backend: Python Flask REST API', 'Engine: Pre-trained scikit-learn ML model'],
+        items: ['Frontend: React / Streamlit interface', 'Backend: Python Flask REST API', 'Engine: Pre-trained CatBoost & Scikit-Learn ML models'],
       },
       {
         category: 'CI/CD Architecture',
@@ -223,36 +223,48 @@ export const PROJECTS: ProjectItem[] = [
         title: 'ML Dependency Compilation in Minimal Slim Container',
         category: 'Docker Build & C Toolchain',
         problem:
-          'When compiling scikit-learn and numpy on python:3.11-slim, pip install threw fatal compilation errors ("error: command \'gcc\' failed: No such file or directory") because lightweight slim base images omit native C compilers and header files.',
+          'When compiling catboost, scikit-learn, and numpy on python:3.11-slim, pip install threw fatal compilation errors ("error: command \'gcc\' failed: No such file or directory") because lightweight slim base images omit native C compilers and header files.',
         solution:
-          'Installed build-essential and gcc before dependency installation, followed immediately by apt cache cleanup (rm -rf /var/lib/apt/lists/*) to prevent intermediate build artifacts from bloating the final production image.',
+          'Injected build-essential and gcc before dependency installation, followed immediately by apt cache cleanup (rm -rf /var/lib/apt/lists/*) and pip --no-cache-dir to prevent intermediate build artifacts from bloating the single-stage image.',
         codeSnippet: {
           language: 'dockerfile',
-          code: `RUN apt-get update && apt-get install -y \\
+          code: `FROM python:3.11-slim
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \\
     build-essential \\
     gcc \\
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt`,
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]`,
         },
         impact: '100% stable ML wheel compilation while maintaining minimal container footprint.',
       },
       {
         id: '02',
-        title: 'Idempotent Container Teardown on Fresh Deployments',
+        title: 'Idempotent Teardown & Workspace Hygiene on CI Runners',
         category: 'Jenkins Automation & Container Lifecycle',
         problem:
-          'On initial pipeline executions or freshly provisioned runners where ml-container or ml-app did not exist yet, running docker stop or docker rmi returned non-zero exit code 1. Jenkins treated this as a fatal step failure and prematurely aborted the build.',
+          'During automated pipeline runs on Jenkins build agents, leftover test containers or stale local images from previous runs caused port conflicts and tag collisions. However, running docker stop or docker rmi on a clean runner where ml-container or ml-app did not exist returned exit code 1, prematurely aborting the build.',
         solution:
-          'Appended safe exit status evaluation (|| exit 0) within the Windows bat pipeline steps, ensuring teardown stages remain strictly idempotent across initial runs, clean environments, and subsequent redeployments.',
+          'Appended safe exit status evaluation (|| exit 0) within the Jenkins pipeline cleanup steps, ensuring pre-build workspace teardown remains strictly idempotent across fresh runners and repeat builds before packaging and pushing to Nexus.',
         codeSnippet: {
-          language: 'bat',
-          code: `docker stop ml-container || exit 0
-docker rm ml-container || exit 0
-docker rmi ml-app || exit 0`,
+          language: 'groovy',
+          code: `stage('Clean & Teardown') {
+    steps {
+        sh '''
+        docker stop ml-container || exit 0
+        docker rm ml-container || exit 0
+        docker rmi ml-app || exit 0
+        '''
+    }
+}`,
         },
-        impact: 'Zero false-positive pipeline aborts during clean starts or runner reboots.',
+        impact: 'Zero false-positive pipeline aborts during clean starts, ensuring reliable builds before pushing to Nexus.',
       },
       {
         id: '03',
