@@ -9,7 +9,7 @@ export const siteConfig = {
     github: 'https://github.com/iamkhush30',
     linkedin: 'https://linkedin.com/in/khush30',
     email: 'khushmakwana1980@gmail.com',
-    resume: 'https://drive.google.com/file/d/1OujWLrFF8_KbdnINvtsS4t20OJazN3p9/view?usp=sharing',
+    resume: 'https://drive.google.com/file/d/1bZNQ2C-cBE9oaZA3vaFf35vaqQG6jIPR/view?usp=sharing',
   },
   author: {
     name: 'Khush Makwana',

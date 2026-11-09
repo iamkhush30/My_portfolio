@@ -5360,7 +5360,7 @@
               "height": 66
             },
             "snippet": "<h1 class=\"text-3xl sm:text-5xl lg:text-6xl font-extrabold text-foreground tracking-t…\">",
-            "nodeLabel": "CI/CD Pipeline for an ML App"
+            "nodeLabel": "CI Pipeline for an ML App"
           }
         ]
       },

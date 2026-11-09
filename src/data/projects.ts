@@ -123,7 +123,7 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: '01',
     slug: 'cicd-pipeline-ml-app',
-    title: 'CI/CD Pipeline for an ML App',
+    title: 'CI Pipeline for an ML App',
     shortTitle: 'CI/CD Pipeline · ML App',
     subtitle: 'Automated CI/CD Delivery Pipeline for Heart Disease Prediction',
     tagline: 'DevOps & CI/CD Pipeline',

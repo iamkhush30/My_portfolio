@@ -12,7 +12,6 @@ import {
   Settings,
   Box,
   Database,
-  Rocket,
   Activity,
   Search,
   Layout,
@@ -33,44 +32,44 @@ const DEVOPS_NODES: StackNode[] = [
   {
     id: 'source',
     label: 'Source',
-    tool: 'GitLab / Git',
-    desc: 'Version-controlled codebase with branch protections and commit triggers.',
+    tool: 'GitLab',
+    desc: 'Developer pushes code to the GitLab repository.',
     icon: <GitBranch className="w-4 h-4 text-blue-400" />,
+  },
+  {
+    id: 'trigger',
+    label: 'Trigger',
+    tool: 'Webhook',
+    desc: 'A GitLab webhook triggers the Jenkins automation server.',
+    icon: <Activity className="w-4 h-4 text-blue-400" />,
   },
   {
     id: 'build',
     label: 'Build',
-    tool: 'Jenkins CI',
-    desc: 'Declarative pipelines running automated tests and artifact compilation.',
+    tool: 'Jenkins',
+    desc: 'The Jenkins agent pulls the repository and checks dependencies.',
     icon: <Settings className="w-4 h-4 text-blue-400" />,
   },
   {
     id: 'package',
     label: 'Package',
     tool: 'Docker',
-    desc: 'Immutable, multi-stage container images built for deterministic runs.',
+    desc: 'A container image is built from the Dockerfile specification.',
     icon: <Box className="w-4 h-4 text-blue-400" />,
   },
   {
-    id: 'registry',
-    label: 'Registry',
-    tool: 'Nexus / ECR',
-    desc: 'Encrypted artifact storage with semantic build-ID version tagging.',
+    id: 'tag',
+    label: 'Tag',
+    tool: 'Jenkins BUILD_ID',
+    desc: 'The image is tagged with a unique Jenkins build execution ID.',
     icon: <Database className="w-4 h-4 text-blue-400" />,
   },
   {
-    id: 'deploy',
-    label: 'Deploy',
-    tool: 'Kubernetes / AWS',
-    desc: 'Zero-downtime rolling deployments and declarative cluster workloads.',
-    icon: <Rocket className="w-4 h-4 text-blue-400" />,
-  },
-  {
-    id: 'monitor',
-    label: 'Monitor',
-    tool: 'CloudWatch / Prom',
-    desc: 'Real-time telemetry, automated health probes, and alert thresholds.',
-    icon: <Activity className="w-4 h-4 text-blue-400" />,
+    id: 'registry',
+    label: 'Push',
+    tool: 'Nexus',
+    desc: 'The final image is pushed to a private Nexus Docker registry.',
+    icon: <Database className="w-4 h-4 text-blue-400" />,
   },
 ];
 
@@ -121,8 +120,8 @@ const CAPABILITIES: CapabilityCardData[] = [
     title: 'Cloud & DevOps Engineering',
     bgTitle: 'DevOps',
     outcome:
-      'Automated end-to-end CI/CD pipelines shipping tested code without manual intervention.',
-    tools: ['GitLab CI', 'Jenkins', 'Docker', 'Kubernetes', 'Nexus'],
+      'Automated CI delivery from GitLab push through Jenkins, Docker, and Nexus.',
+    tools: ['GitLab', 'Jenkins', 'Docker', 'Nexus', 'Webhook'],
     proofHref: '/cicd-pipeline-ml-app',
     stat: '100%',
     statLabel: 'Automated Delivery',
@@ -257,7 +256,7 @@ export const SkillsParallax = () => {
                   Interactive Pipeline Architecture
                 </span>
                 <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
-                  Full-Cycle DevOps & Design Flow
+                  Cycle of DevOps & Design Flow
                 </h3>
               </div>
               <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
@@ -270,7 +269,7 @@ export const SkillsParallax = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs font-mono text-blue-400 uppercase tracking-wider">
                 <span>01. DevOps Delivery Pipeline</span>
-                <span className="text-slate-400 hidden sm:inline">Source → Deploy</span>
+                <span className="text-slate-400 hidden sm:inline">Source → Registry</span>
               </div>
 
               <div
