@@ -123,98 +123,107 @@ export const PROJECTS: ProjectItem[] = [
   {
     id: '01',
     slug: 'cicd-pipeline-ml-app',
-    title: 'CI Pipeline for an ML App',
+      title: 'CI/CD Pipeline for an ML App',
     shortTitle: 'CI/CD Pipeline · ML App',
     subtitle: 'Automated CI/CD Delivery Pipeline for Heart Disease Prediction',
-    tagline: 'DevOps & CI/CD Pipeline',
+    tagline: 'DevOps · CI/CD & Cloud Deployment',
     category: 'DevOps',
     template: 'devops',
     role: 'DevOps Engineer',
     date: '2024',
-    tools: ['GitLab', 'Jenkins', 'Docker', 'Nexus', 'Webhook', 'Bash'],
+    tools: ['GitHub', 'Jenkins', 'Docker', 'Pytest', 'Nexus', 'AWS ECR', 'AWS EC2', 'Terraform', 'SSM'],
     summary:
-      'Architected an automated CI delivery pipeline for a Machine Learning Heart Disease Prediction application. Automates the full path from developer code push in GitLab, through automated Jenkins builds and container packaging, to versioned Docker image storage in a private Sonatype Nexus Repository Manager.',
+      'Built an automated CI/CD pipeline for a Flask-based Heart Disease Prediction application. Jenkins runs the Pytest suite, builds a Docker image, publishes build-number and latest tags to both Sonatype Nexus and AWS ECR, and replaces the local Docker deployment on port 5000. Terraform provisions the AWS ECR repository and an EC2 host with Docker, SSM access, and an IAM deployment identity.',
     archivedParagraph:
-      'Built automated pipelines that handle everything from code commit to artifact publishing in Sonatype Nexus Repository Manager — eliminating manual handoffs and versioning every Docker image with unique Jenkins build IDs.',
+      'Automated code validation, Docker image packaging, Nexus and AWS ECR publishing, and local container replacement for a Heart Disease Machine Learning API — with build-number and latest tags for traceable releases.',
     seoTitle: 'CI/CD Pipeline for ML App | Khush Makwana DevOps Case Study',
     seoDescription:
-      'Technical breakdown of a production-style CI/CD pipeline using GitLab, Jenkins, Docker, and Nexus for a Heart Disease Machine Learning Prediction application.',
+      'Technical breakdown of the Jenkins CI/CD pipeline using Pytest, Docker, Sonatype Nexus, AWS ECR, Terraform, and local container deployment for a Heart Disease Machine Learning application.',
     image: '/assets/CICD-Pipeline.png',
     githubUrl: 'https://github.com/iamkhush30/HeartRisk-Predictor',
     hasLivePreview: false,
     metrics: [
-      { label: 'Pipeline Automation', value: '100%', note: 'Zero manual handoffs from git commit to registry' },
-      { label: 'Target Registry', value: 'Nexus', note: 'Isolated Docker repository with build-ID tags' },
-      { label: 'Artifact Delivery', value: 'Nexus', note: 'Versioned container image tagged with Jenkins BUILD_ID' },
+      { label: 'Pipeline Automation', value: 'CI/CD', note: 'Tests, packaging, registry publishing, and local deployment' },
+      { label: 'Target Registries', value: 'Nexus + ECR', note: 'Build-number and latest image tags' },
+      { label: 'Container Runtime', value: 'Docker', note: 'Flask API deployed on port 5000' },
     ],
-    pipelineFlow: 'GitLab → Jenkins → Docker → Nexus',
+    pipelineFlow: 'Jenkins Declarative Pipeline → Pytest → Docker Build → Nexus Push → AWS ECR Push → Local Docker Replacement',
     stages: [
       {
-        name: 'Source',
-        tool: 'GitLab',
-        detail: 'git push origin main',
-        iconName: 'Gitlab',
-        responsibility: 'Developer commits code changes and pushes to protected main branch, initiating automated pipeline trigger.',
-        command: 'git push origin main',
-        guardrail: 'Protected branch rules prevent unreviewed direct pushes to production branch.',
-      },
-      {
-        name: 'Trigger',
-        tool: 'Webhook',
-        detail: 'HTTP POST event trigger',
-        iconName: 'Zap',
-        responsibility: 'GitLab dispatches an HTTP POST payload notifying the Jenkins controller of the new commit SHA.',
-        command: 'POST /jenkins/project-webhook/',
-        guardrail: 'Payload authentication via secret token ensures only authorized GitLab events trigger jobs.',
-      },
-      {
-        name: 'Build',
-        tool: 'Jenkins',
-        detail: 'Jenkinsfile pipeline run',
+        name: 'Jenkins',
+        tool: 'Jenkins Declarative Pipeline',
+        detail: 'SCM checkout & stage orchestration',
         iconName: 'Settings',
-        responsibility: 'Jenkins agent checks out source code, sets up Python environment, and compiles dependencies.',
-        command: "Jenkinsfile · stage('Checkout & Build')",
-        guardrail: 'Slim container C-toolchain compilation patch prevents missing native compiler failures.',
+        responsibility: 'Checks out the repository and executes the Jenkinsfile stages sequentially on the Jenkins Windows agent.',
+        command: 'Jenkinsfile',
+        guardrail: 'The pipeline controls test, build, registry push, and local deployment order.',
       },
       {
-        name: 'Package',
+        name: 'Run Unit & Schema Tests',
+        tool: 'Python & Pytest',
+        detail: 'API and schema validation',
+        iconName: 'Activity',
+        responsibility: 'Creates or reuses a workspace virtual environment, installs pinned and current dependencies, and runs test_app.py before packaging.',
+        command: 'venv\\Scripts\\python -m pytest test_app.py -v',
+        guardrail: 'A 30-minute stage timeout bounds the test run and dependency installation failures stop the pipeline.',
+      },
+      {
+        name: 'Build Docker Image',
         tool: 'Docker',
-        detail: 'docker build & tag',
+        detail: 'python:3.11-slim image',
         iconName: 'Box',
-        responsibility: 'Packages application code, ML inference weights, and runtime into a lean single-stage container image based on python:3.11-slim.',
-        command: 'docker build -t heart-predict:${BUILD_ID} .',
-        guardrail: 'Tags every container with unique Jenkins ${BUILD_ID} to prevent tag overwrite collisions.',
+        responsibility: 'Packages the Flask API, the cardio model bundle, custom unpickler code, and runtime dependencies into an ml-app image.',
+        command: 'docker build -t ml-app .',
+        guardrail: 'The build installs native compilation tools and has a 40-minute stage timeout.',
       },
       {
-        name: 'Registry',
-        tool: 'Nexus',
-        detail: 'Private Docker repository',
+        name: 'Push to Nexus',
+        tool: 'Sonatype Nexus',
+        detail: 'Private Docker registry',
         iconName: 'Database',
-        responsibility: 'Authenticates securely and publishes tagged Docker image to private Sonatype Nexus registry.',
-        command: 'docker push nexus:8082/heart-predict:${BUILD_ID}',
-        guardrail: 'Scoped credential injection at point-of-push eliminates static session timeout failures.',
+        responsibility: 'Authenticates with Jenkins credentials, tags the image with BUILD_NUMBER and latest, and pushes both tags to Nexus.',
+        command: 'docker push host.docker.internal:8082/ml-app:${BUILD_NUMBER}',
+        guardrail: 'Docker password input uses --password-stdin, and push failures return a failed stage.',
+      },
+      {
+        name: 'Push to AWS ECR',
+        tool: 'Amazon ECR',
+        detail: 'ap-south-1 / ml-app',
+        iconName: 'Database',
+        responsibility: 'Uses Jenkins AWS credentials to authenticate to ECR, then publishes the build-number and latest tags to the account repository.',
+        command: 'aws ecr get-login-password --region ap-south-1',
+        guardrail: 'ECR publishing has a 90-minute timeout and scan-on-push is enabled by Terraform.',
+      },
+      {
+        name: 'Remove Older',
+        tool: 'Local Container Replacement',
+        detail: 'Replace ml-container · port 5000',
+        iconName: 'Zap',
+        responsibility: 'Removes an existing ml-container if present, then starts the newly built ml-app image as a local Docker container.',
+        command: 'docker run -d -p 5000:5000 --name ml-container ml-app',
+        guardrail: 'The local replacement runs after tests and both registry pushes complete. The post action prunes unused Docker images.',
       },
     ],
     breakdown: [
-      { stage: 'Source', action: 'Developer pushes code to GitLab repository', detail: 'git push origin main' },
-      { stage: 'Trigger', action: 'GitLab webhook triggers Jenkins automation server', detail: 'POST /jenkins/project-webhook/' },
-      { stage: 'Checkout', action: 'Jenkins agent pulls repository & checks dependencies', detail: "Jenkinsfile · stage('Checkout')" },
-      { stage: 'Build', action: 'Container image built from Dockerfile specification', detail: 'docker build -t heart-predict:latest .' },
-      { stage: 'Tag', action: 'Image tagged with unique Jenkins build execution ID', detail: 'nexus:8082/heart-predict:${BUILD_ID}' },
-      { stage: 'Push', action: 'Final image pushed to private Nexus Docker registry', detail: 'docker push nexus:8082/heart-predict:${BUILD_ID}' },
+      { stage: 'Jenkins', action: 'Declarative Jenkinsfile orchestrates the pipeline', detail: 'SCM checkout · Windows Jenkins agent' },
+      { stage: 'Test', action: 'Workspace virtual environment runs Pytest first', detail: 'test_app.py · health, prediction, and schema tests' },
+      { stage: 'Build', action: 'Docker builds the Flask ML container', detail: 'docker build -t ml-app .' },
+      { stage: 'Nexus', action: 'Build-number and latest tags are pushed to Nexus', detail: 'host.docker.internal:8082/ml-app' },
+      { stage: 'ECR', action: 'Build-number and latest tags are pushed to AWS ECR', detail: 'ap-south-1 · ml-app repository' },
+      { stage: 'Local replace', action: 'Existing ml-container is removed and recreated', detail: 'ml-container · port 5000' },
     ],
     infrastructureSpecs: [
       {
         category: 'Application Stack',
-        items: ['Frontend: React / Streamlit interface', 'Backend: Python Flask REST API', 'Engine: Pre-trained CatBoost & Scikit-Learn ML models'],
+        items: ['Frontend: React application', 'Backend: Python Flask REST API', 'Engine: Saved Random Forest model bundle with BMI, age-group, log, and z-score features'],
       },
       {
         category: 'CI/CD Architecture',
-        items: ['GitLab Server with configured post-receive webhook', 'Jenkins Master controller executing declarative Jenkinsfile', 'Docker Engine for isolated, reproducible builds', 'Sonatype Nexus Repository Manager (OSS) for artifact hosting'],
+        items: ['Jenkins declarative pipeline with a workspace virtual environment', 'Pytest health, prediction, and ML schema tests before image build', 'Docker Engine for reproducible backend image builds', 'Sonatype Nexus private Docker registry and AWS ECR for versioned artifacts'],
       },
       {
         category: 'Security & Integrity',
-        items: ['Registry authentication using scoped credential store', 'Isolated build agents preventing environment drift', 'Build failure notifications with audit logs'],
+        items: ['Jenkins username/password credentials injected withCredentials', 'Docker registry passwords passed through --password-stdin', 'AWS IAM identity limited to ECR and SSM actions', 'Terraform EC2 metadata tokens required and root storage encrypted'],
       },
     ],
     engineeringChallenges: [
@@ -246,58 +255,53 @@ CMD ["python", "app.py"]`,
       },
       {
         id: '02',
-        title: 'Idempotent Teardown & Workspace Hygiene on CI Runners',
-        category: 'Jenkins Automation & Container Lifecycle',
+        title: 'Jenkins Service Account Couldn’t See Python or Docker',
+        category: 'Jenkins on Windows & PATH',
         problem:
-          'During automated pipeline runs on Jenkins build agents, leftover test containers or stale local images from previous runs caused port conflicts and tag collisions. However, running docker stop or docker rmi on a clean runner where ml-container or ml-app did not exist returned exit code 1, prematurely aborting the build.',
+          'Jenkins ran as a Windows service (nt authority\\system), so stages failed with "python" is not recognized as an internal or external command and later "docker" is not recognized, even though both worked in my terminal. After the PATH fix, docker build still failed with open //./pipe/docker_engine: The system cannot find the file specified, because Docker Desktop’s engine lives in my user session.',
         solution:
-          'Appended safe exit status evaluation (|| exit 0) within the Jenkins pipeline cleanup steps, ensuring pre-build workspace teardown remains strictly idempotent across fresh runners and repeat builds before packaging and pushing to Nexus.',
-        codeSnippet: {
-          language: 'groovy',
-          code: `stage('Clean & Teardown') {
-    steps {
-        sh '''
-        docker stop ml-container || exit 0
-        docker rm ml-container || exit 0
-        docker rmi ml-app || exit 0
-        '''
-    }
-}`,
-        },
-        impact: 'Zero false-positive pipeline aborts during clean starts, ensuring reliable builds before pushing to Nexus.',
+          'Added a debug stage with whoami and echo %PATH% to confirm the account, set PATH once in the Jenkinsfile environment block, and pointed Jenkins at Docker’s local TCP endpoint with DOCKER_HOST. I kept that endpoint local-only, since it has no authentication.',
+        impact: 'Jenkins now resolves both Python and Docker consistently and can reach the Docker Desktop engine.',
       },
       {
         id: '03',
-        title: 'Nexus Registry Token Expiration on Extended Runs',
-        category: 'Artifact Registry & Authentication',
+        title: 'Dependency Downloads Timing Out on a Slow Connection',
+        category: 'Python & Pip',
         problem:
-          'Static Docker CLI login sessions or temporary registry tokens timed out during lengthy ML test and build cycles, causing the final artifact upload to fail with HTTP 401 Unauthorized.',
+          'The catboost download (about 100 MB) ran at about 150 kB/s and failed with ReadTimeoutError: HTTPSConnectionPool(host=\'files.pythonhosted.org\'). pytest never got installed, so the test stage failed after about 5 minutes.',
         solution:
-          'Integrated Jenkins withCredentials wrapper with scoped usernamePassword binding (nexus-docker-auth), injecting authenticated Docker login dynamically at the exact point-of-push.',
-        codeSnippet: {
-          language: 'groovy',
-          code: `withCredentials([usernamePassword(credentialsId: 'nexus-docker-auth', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-    sh "docker login -u \${USER} -p \${PASS} \${NEXUS_REGISTRY}"
-    sh "docker push \${NEXUS_REGISTRY}/\${IMAGE_NAME}:\${BUILD_NUMBER}"
-}`,
-        },
-        impact: 'Secured credentials and eliminated push authentication failures on long runs.',
+          'Moved installs into a workspace virtualenv that later builds reuse, raised the limits with --default-timeout=300 --retries 10, and added stage timeouts so a stuck download can’t hang the pipeline. The Jenkins Docker build runs without a --no-cache override, while the Dockerfile copies requirements.txt before the application source so Docker can reuse the dependency layer.',
+        impact: 'Dependency installation is more resilient, reusable, and bounded on slow connections.',
       },
       {
         id: '04',
-        title: 'Docker Daemon Socket Permissions on Jenkins Agent',
-        category: 'CI/CD Agent Security & Daemon Access',
+        title: 'A Green Pipeline That Hid Failures',
+        category: 'Pipeline Reliability',
         problem:
-          'The Jenkins service user lacked authorization to communicate with the Docker daemon pipe, returning "permission denied while trying to connect to the Docker daemon socket".',
+          'My first Nexus stage was wrapped in catchError(buildResult: \'SUCCESS\'), so a failed push left the stage orange while the build stayed green. The old container was also removed before the tests ran, so a failing build could take down a working deployment.',
         solution:
-          'Configured the host daemon security context by granting the Jenkins service identity appropriate permissions and adding it to the authorized Docker security group, without exposing the runner to unsafe root privileges.',
-        codeSnippet: {
-          language: 'bash',
-          code: `# Configure Jenkins runner permissions
-sudo usermod -aG docker jenkins
-sudo systemctl restart jenkins`,
-        },
-        impact: 'Enabled secure, headless CI Docker automation without running Jenkins as root.',
+          'Removed catchError, moved Pytest to the start of the pipeline, and ordered Nexus and ECR pushes before local container replacement. Login and registry push failures are checked explicitly, and Docker credentials are passed with --password-stdin so passwords stay out of logs.',
+        impact: 'Pipeline status now matches command outcomes, tests run first, and deployment is protected from failed pushes.',
+      },
+      {
+        id: '05',
+        title: 'Nexus Refused to Overwrite the latest Tag',
+        category: 'Registry Policy',
+        problem:
+          'The first build pushed fine, but the next one failed with error from registry: ... cannot be updated as asset already exists and redeploy is not allowed.',
+        solution:
+          'Tagged each image with its build number plus a moving latest, and changed the repository’s deployment policy to allow redeploy. Build-number tags stay as rollback points.',
+        impact: 'Repeated deployments work with a moving latest tag while preserving immutable build-number rollback points.',
+      },
+      {
+        id: '06',
+        title: 'Disk Space Disappearing',
+        category: 'Docker Storage Management',
+        problem:
+          'After setting up Jenkins, Nexus and Docker, free disk dropped from about 75 GB to 58 GB. docker system df showed 5.6 GB of images, 3.4 GB of it reclaimable (duplicate test tags).',
+        solution:
+          'Removed the extra registry tags after each push with docker rmi and added docker image prune -f to the pipeline’s post step. Stale registry tags are cleaned without using prune -a, preserving cached Docker layers. Terraform applies an ECR lifecycle policy that keeps the last 2 images.',
+        impact: 'Duplicate and stale test images are cleaned up without discarding reusable cached layers.',
       },
     ],
     todoPlaceholders: [],

@@ -34,6 +34,7 @@ import { cn } from '@/shared/lib/utils';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   Gitlab: <Gitlab className="w-5 h-5 text-primary" />,
+  Github: <Github className="w-5 h-5 text-primary" />,
   Zap: <Zap className="w-5 h-5 text-primary" />,
   Settings: <Settings className="w-5 h-5 text-primary" />,
   Box: <Box className="w-5 h-5 text-primary" />,
