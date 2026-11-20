@@ -125,15 +125,15 @@ export const PROJECTS: ProjectItem[] = [
     slug: 'cicd-pipeline-ml-app',
       title: 'CI/CD Pipeline for an ML App',
     shortTitle: 'CI/CD Pipeline · ML App',
-    subtitle: 'Automated CI/CD Delivery Pipeline for Heart Disease Prediction',
-    tagline: 'DevOps · CI/CD & Cloud Deployment',
+    subtitle: 'Automated CI Pipeline for Heart Disease Prediction',
+    tagline: 'DevOps · CI/CD & Cloud Infrastructure',
     category: 'DevOps',
     template: 'devops',
     role: 'DevOps Engineer',
     date: '2024',
     tools: ['GitHub', 'Jenkins', 'Docker', 'Pytest', 'Nexus', 'AWS ECR', 'AWS EC2', 'Terraform', 'SSM'],
     summary:
-      'Built an automated CI/CD pipeline for a Flask-based Heart Disease Prediction application. Jenkins runs the Pytest suite, builds a Docker image, publishes build-number and latest tags to both Sonatype Nexus and AWS ECR, and replaces the local Docker deployment on port 5000. Terraform provisions the AWS ECR repository and an EC2 host with Docker, SSM access, and an IAM deployment identity.',
+      'Built a CI pipeline for a Flask-based Heart Disease Prediction app. Jenkins runs the pytest suite for REST endpoints and ML feature schemas and aborts on failure, builds a Docker image, pushes build-number and latest tags to a private Sonatype Nexus registry and AWS ECR, and replaces the running container on port 5000. Terraform provisions the AWS side, including ECR, an EC2 host with Docker and SSM access, and an IAM deployment identity. The backend and React/nginx UI run together on AWS, where deployment is currently manual.',
     archivedParagraph:
       'Automated code validation, Docker image packaging, Nexus and AWS ECR publishing, and local container replacement for a Heart Disease Machine Learning API — with build-number and latest tags for traceable releases.',
     seoTitle: 'CI/CD Pipeline for ML App | Khush Makwana DevOps Case Study',
@@ -143,12 +143,30 @@ export const PROJECTS: ProjectItem[] = [
     githubUrl: 'https://github.com/iamkhush30/HeartRisk-Predictor',
     hasLivePreview: false,
     metrics: [
-      { label: 'Pipeline Automation', value: 'CI/CD', note: 'Tests, packaging, registry publishing, and local deployment' },
-      { label: 'Target Registries', value: 'Nexus + ECR', note: 'Build-number and latest image tags' },
-      { label: 'Container Runtime', value: 'Docker', note: 'Flask API deployed on port 5000' },
+      { label: 'Pipeline Automation', value: 'Automated CI', note: 'Test → build → push on each pipeline run' },
+      { label: 'Target Registries', value: 'Dual Registry', note: 'Nexus + AWS ECR · build-number and latest tags' },
+      { label: 'AWS Deployment', value: 'Manual', note: 'CI is automated; AWS deployment is performed manually' },
     ],
-    pipelineFlow: 'Jenkins Declarative Pipeline → Pytest → Docker Build → Nexus Push → AWS ECR Push → Local Docker Replacement',
+    pipelineFlow: 'Source → Trigger → Checkout → Pytest in venv (REST & ML Schemas) → Docker Build → Tag (BUILD_NUMBER + latest) → Push to Nexus & ECR → Replace Local Container on :5000',
     stages: [
+      {
+        name: 'Source & Trigger',
+        tool: 'GitHub',
+        detail: 'Source change & pipeline trigger',
+        iconName: 'Github',
+        responsibility: 'Provides the application source that starts the Jenkins pipeline.',
+        command: 'Push to main',
+        guardrail: 'Source: GitHub repository. Jenkins job trigger settings control when a source change starts this pipeline.',
+      },
+      {
+        name: 'Checkout',
+        tool: 'Jenkins SCM',
+        detail: 'Repository source checkout',
+        iconName: 'Settings',
+        responsibility: 'Checks out the Jenkinsfile and project source before running the declarative pipeline stages.',
+        command: 'Pipeline script from SCM',
+        guardrail: 'Jenkins checks out the repository at the configured branch/revision and runs the Jenkinsfile found in that checkout.',
+      },
       {
         name: 'Jenkins',
         tool: 'Jenkins Declarative Pipeline',
@@ -156,7 +174,7 @@ export const PROJECTS: ProjectItem[] = [
         iconName: 'Settings',
         responsibility: 'Checks out the repository and executes the Jenkinsfile stages sequentially on the Jenkins Windows agent.',
         command: 'Jenkinsfile',
-        guardrail: 'The pipeline controls test, build, registry push, and local deployment order.',
+        guardrail: 'The Jenkinsfile defines one Windows agent pipeline with sequential Test, Build, Nexus, ECR, and local container stages.',
       },
       {
         name: 'Run Unit & Schema Tests',
@@ -165,7 +183,7 @@ export const PROJECTS: ProjectItem[] = [
         iconName: 'Activity',
         responsibility: 'Creates or reuses a workspace virtual environment, installs pinned and current dependencies, and runs test_app.py before packaging.',
         command: 'venv\\Scripts\\python -m pytest test_app.py -v',
-        guardrail: 'A 30-minute stage timeout bounds the test run and dependency installation failures stop the pipeline.',
+        guardrail: 'The stage uses a workspace venv, installs requirements.txt and pytest with retry/timeout flags, checks errorlevel, and has a 30-minute timeout.',
       },
       {
         name: 'Build Docker Image',
@@ -174,16 +192,16 @@ export const PROJECTS: ProjectItem[] = [
         iconName: 'Box',
         responsibility: 'Packages the Flask API, the cardio model bundle, custom unpickler code, and runtime dependencies into an ml-app image.',
         command: 'docker build -t ml-app .',
-        guardrail: 'The build installs native compilation tools and has a 40-minute stage timeout.',
+        guardrail: 'The Dockerfile uses python:3.11-slim, installs build-essential and gcc, copies requirements before source, and has a 40-minute build timeout.',
       },
       {
         name: 'Push to Nexus',
         tool: 'Sonatype Nexus',
-        detail: 'Private Docker registry',
+        detail: 'nexus-docker-repo · host.docker.internal:8082',
         iconName: 'Database',
         responsibility: 'Authenticates with Jenkins credentials, tags the image with BUILD_NUMBER and latest, and pushes both tags to Nexus.',
-        command: 'docker push host.docker.internal:8082/ml-app:${BUILD_NUMBER}',
-        guardrail: 'Docker password input uses --password-stdin, and push failures return a failed stage.',
+        command: 'docker push host.docker.internal:8082/nexus-docker-repo/ml-app:${BUILD_NUMBER}',
+        guardrail: 'Nexus credentials use Jenkins credentials ID nexus-credentials; docker login receives the password through stdin, and push exit codes are checked.',
       },
       {
         name: 'Push to AWS ECR',
@@ -192,7 +210,7 @@ export const PROJECTS: ProjectItem[] = [
         iconName: 'Database',
         responsibility: 'Uses Jenkins AWS credentials to authenticate to ECR, then publishes the build-number and latest tags to the account repository.',
         command: 'aws ecr get-login-password --region ap-south-1',
-        guardrail: 'ECR publishing has a 90-minute timeout and scan-on-push is enabled by Terraform.',
+        guardrail: 'AWS credentials use Jenkins ID aws-jenkins-creds, the account ID and ap-south-1 ECR endpoint are resolved in the batch script, and the stage has a 90-minute timeout.',
       },
       {
         name: 'Remove Older',
@@ -201,57 +219,49 @@ export const PROJECTS: ProjectItem[] = [
         iconName: 'Zap',
         responsibility: 'Removes an existing ml-container if present, then starts the newly built ml-app image as a local Docker container.',
         command: 'docker run -d -p 5000:5000 --name ml-container ml-app',
-        guardrail: 'The local replacement runs after tests and both registry pushes complete. The post action prunes unused Docker images.',
+        guardrail: 'The stage removes the existing ml-container and starts ml-app on port 5000; docker image prune -f runs in the pipeline post-always block.',
       },
     ],
     breakdown: [
+      { stage: 'Source', action: 'Source change is made in the GitHub repository', detail: 'Push/commit to main' },
+      { stage: 'Trigger', action: 'A GitHub source change starts the Jenkins pipeline', detail: 'Configured in the Jenkins job' },
+      { stage: 'Checkout', action: 'Jenkins checks out the repository source', detail: 'Jenkinsfile and application files' },
       { stage: 'Jenkins', action: 'Declarative Jenkinsfile orchestrates the pipeline', detail: 'SCM checkout · Windows Jenkins agent' },
-      { stage: 'Test', action: 'Workspace virtual environment runs Pytest first', detail: 'test_app.py · health, prediction, and schema tests' },
+      { stage: 'Test', action: 'Workspace virtualenv runs Pytest before Docker packaging', detail: 'test_app.py · Flask REST endpoints and ML feature schemas' },
       { stage: 'Build', action: 'Docker builds the Flask ML container', detail: 'docker build -t ml-app .' },
-      { stage: 'Nexus', action: 'Build-number and latest tags are pushed to Nexus', detail: 'host.docker.internal:8082/ml-app' },
+      { stage: 'Nexus', action: 'Build-number and latest tags are pushed to Nexus', detail: 'host.docker.internal:8082/nexus-docker-repo/ml-app' },
       { stage: 'ECR', action: 'Build-number and latest tags are pushed to AWS ECR', detail: 'ap-south-1 · ml-app repository' },
       { stage: 'Local replace', action: 'Existing ml-container is removed and recreated', detail: 'ml-container · port 5000' },
+      { stage: 'Terraform AWS', action: 'Terraform provisions the AWS deployment foundation', detail: 'ECR · EC2 · Docker · SSM · Jenkins IAM identity' },
     ],
     infrastructureSpecs: [
       {
         category: 'Application Stack',
-        items: ['Frontend: React application', 'Backend: Python Flask REST API', 'Engine: Saved Random Forest model bundle with BMI, age-group, log, and z-score features'],
+        items: ['Frontend: React application served with nginx', 'Backend: Python Flask REST API', 'Deployment: Backend and React/nginx UI run together on AWS with manual deployment'],
       },
       {
         category: 'CI/CD Architecture',
-        items: ['Jenkins declarative pipeline with a workspace virtual environment', 'Pytest health, prediction, and ML schema tests before image build', 'Docker Engine for reproducible backend image builds', 'Sonatype Nexus private Docker registry and AWS ECR for versioned artifacts'],
+        items: ['Jenkins declarative pipeline with a workspace virtual environment', 'Pytest runs Flask /api/health and /api/predict tests plus ML feature schema checks before image build', 'Pytest failure aborts the pipeline before Docker packaging', 'Docker Engine for reproducible backend image builds', 'Sonatype Nexus private Docker repository and AWS ECR for build-number/latest artifacts'],
       },
       {
         category: 'Security & Integrity',
         items: ['Jenkins username/password credentials injected withCredentials', 'Docker registry passwords passed through --password-stdin', 'AWS IAM identity limited to ECR and SSM actions', 'Terraform EC2 metadata tokens required and root storage encrypted'],
       },
+      {
+        category: 'Terraform AWS Provisioning',
+        items: ['Terraform >= 1.5 and AWS provider ~> 5.0 provision resources in ap-south-1', 'Amazon Linux 2023 EC2 host in the default VPC with Docker and 2 GB swap', 'ECR repository ml-app with scan-on-push and last-2-images lifecycle policy', 'EC2 IAM profile with SSM managed access and ECR read-only access', 'Dedicated Jenkins IAM user with ECR push/login and SSM send-command permissions', 'AWS deployment is currently manual; the Jenkinsfile does not run an EC2 deployment stage'],
+      },
     ],
     engineeringChallenges: [
       {
         id: '01',
-        title: 'ML Dependency Compilation in Minimal Slim Container',
+        title: 'CatBoost Dependency Compilation in a Slim Docker Image',
         category: 'Docker Build & C Toolchain',
         problem:
-          'When compiling catboost, scikit-learn, and numpy on python:3.11-slim, pip install threw fatal compilation errors ("error: command \'gcc\' failed: No such file or directory") because lightweight slim base images omit native C compilers and header files.',
+          'The python:3.11-slim base image does not include the native build tools needed for dependencies such as CatBoost.',
         solution:
-          'Injected build-essential and gcc before dependency installation, followed immediately by apt cache cleanup (rm -rf /var/lib/apt/lists/*) and pip --no-cache-dir to prevent intermediate build artifacts from bloating the single-stage image.',
-        codeSnippet: {
-          language: 'dockerfile',
-          code: `FROM python:3.11-slim
-WORKDIR /app
-
-RUN apt-get update && apt-get install -y \\
-    build-essential \\
-    gcc \\
-    && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-EXPOSE 5000
-CMD ["python", "app.py"]`,
-        },
-        impact: '100% stable ML wheel compilation while maintaining minimal container footprint.',
+          'Installed build-essential and gcc before installing Python requirements, then cleaned the apt package lists. The Dockerfile remains single-stage and installs from requirements.txt with pip --no-cache-dir.',
+        impact: 'The Docker build can install the required ML dependencies without measured claims about image footprint or wheel compilation.',
       },
       {
         id: '02',

@@ -291,9 +291,6 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                             <span className="block text-xs sm:text-sm font-bold text-white mt-0.5 truncate">
                               {stage.tool}
                             </span>
-                            <span className="block text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 sm:mt-2 truncate">
-                              {stage.detail}
-                            </span>
                           </div>
                         );
                       })}
@@ -336,14 +333,14 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                             </p>
                           </div>
 
-                          {/* Reliability & Guardrail */}
+                          {/* Stage Implementation Detail */}
                           <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-1 sm:space-y-1.5 min-w-0">
                             <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-emerald-400/90 flex items-center gap-1.5 font-semibold">
                               <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
-                              Reliability & Security Guardrail
+                              Stage Implementation
                             </span>
                             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                              {project.stages[activeStage].guardrail || 'Strict automated validation enforced at this stage.'}
+                              {project.stages[activeStage].guardrail || project.stages[activeStage].detail}
                             </p>
                           </div>
                         </div>
@@ -455,11 +452,6 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                             </div>
                           </div>
 
-                          {/* Impact footer */}
-                          <div className="flex items-start gap-2 pt-2 text-xs text-muted-foreground border-t border-slate-100">
-                            <span className="font-semibold text-foreground shrink-0">Outcome:</span>
-                            <span className="leading-relaxed">{item.impact}</span>
-                          </div>
                         </div>
                       </div>
                     ))}
@@ -626,11 +618,6 @@ export const DevOpsProjectTemplate: React.FC<{ project: ProjectItem }> = ({ proj
                             </div>
                           )}
 
-                          {/* Impact footer */}
-                          <div className="flex items-start gap-2 pt-2 text-xs text-muted-foreground border-t border-slate-100">
-                            <span className="font-semibold text-foreground shrink-0">Outcome:</span>
-                            <span className="leading-relaxed">{item.impact}</span>
-                          </div>
                         </div>
                       </div>
                     ))}

@@ -32,45 +32,59 @@ const DEVOPS_NODES: StackNode[] = [
   {
     id: 'source',
     label: 'Source',
-    tool: 'GitLab',
-    desc: 'Developer pushes code to the GitLab repository.',
+    tool: 'GitHub',
+    desc: 'Source changes are stored in the HeartRisk-Predictor repository.',
     icon: <GitBranch className="w-4 h-4 text-blue-400" />,
   },
   {
     id: 'trigger',
     label: 'Trigger',
-    tool: 'Webhook',
-    desc: 'A GitLab webhook triggers the Jenkins automation server.',
+    tool: 'Jenkins Job',
+    desc: 'The Jenkins job starts the Jenkinsfile pipeline for the current source revision.',
     icon: <Activity className="w-4 h-4 text-blue-400" />,
+  },
+  {
+    id: 'checkout',
+    label: 'Checkout',
+    tool: 'Jenkins SCM',
+    desc: 'Jenkins checks out the repository and Pipeline script from SCM.',
+    icon: <GitBranch className="w-4 h-4 text-blue-400" />,
+  },
+  {
+    id: 'test',
+    label: 'Test',
+    tool: 'Pytest',
+    desc: 'A workspace venv runs REST endpoint and ML feature schema tests before the build.',
+    icon: <Settings className="w-4 h-4 text-blue-400" />,
   },
   {
     id: 'build',
     label: 'Build',
-    tool: 'Jenkins',
-    desc: 'The Jenkins agent pulls the repository and checks dependencies.',
-    icon: <Settings className="w-4 h-4 text-blue-400" />,
-  },
-  {
-    id: 'package',
-    label: 'Package',
     tool: 'Docker',
-    desc: 'A container image is built from the Dockerfile specification.',
+    desc: 'The Jenkinsfile builds the Flask ML application as an ml-app image.',
     icon: <Box className="w-4 h-4 text-blue-400" />,
   },
   {
     id: 'tag',
     label: 'Tag',
-    tool: 'Jenkins BUILD_ID',
-    desc: 'The image is tagged with a unique Jenkins build execution ID.',
+    tool: 'BUILD_NUMBER + latest',
+    desc: 'The image receives Jenkins BUILD_NUMBER and latest tags for both registries.',
     icon: <Database className="w-4 h-4 text-blue-400" />,
   },
   {
     id: 'registry',
     label: 'Push',
-    tool: 'Nexus',
-    desc: 'The final image is pushed to a private Nexus Docker registry.',
+    tool: 'Nexus + ECR',
+    desc: 'The build tags are pushed to the Nexus Docker repository and AWS ECR.',
     icon: <Database className="w-4 h-4 text-blue-400" />,
   },
+  {
+    id: 'deploy',
+    label: 'Replace',
+    tool: 'Local Docker',
+    desc: 'Jenkins replaces ml-container with ml-app on port 5000. AWS deployment is manual.',
+    icon: <Server className="w-4 h-4 text-blue-400" />,
+  }
 ];
 
 const DESIGN_NODES: StackNode[] = [
@@ -120,11 +134,11 @@ const CAPABILITIES: CapabilityCardData[] = [
     title: 'Cloud & DevOps Engineering',
     bgTitle: 'DevOps',
     outcome:
-      'Automated CI delivery from GitLab push through Jenkins, Docker, and Nexus.',
-    tools: ['GitLab', 'Jenkins', 'Docker', 'Nexus', 'Webhook'],
+      'Jenkins tests, builds, and pushes the ML app to two registries.',
+    tools: ['GitHub', 'Jenkins', 'Pytest', 'Docker', 'Nexus', 'AWS ECR', 'Terraform'],
     proofHref: '/cicd-pipeline-ml-app',
-    stat: '100%',
-    statLabel: 'Automated Delivery',
+    stat: 'Automated CI',
+    statLabel: 'Test · Build · Push',
     icon: <Server className="w-8 h-8 text-primary" />,
   },
   {
@@ -269,13 +283,13 @@ export const SkillsParallax = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs font-mono text-blue-400 uppercase tracking-wider">
                 <span>01. DevOps Delivery Pipeline</span>
-                <span className="text-slate-400 hidden sm:inline">Source → Registry</span>
+                <span className="text-slate-400 hidden sm:inline">Source → Test → Deploy</span>
               </div>
 
               <div
                 role="tablist"
                 aria-label="DevOps Delivery Stages"
-                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3"
+                className="grid grid-cols-[repeat(auto-fit,minmax(118px,1fr))] gap-2.5"
               >
                 {DEVOPS_NODES.map((node) => {
                   const isActive = activeDevopsNode === node.id;

@@ -70,7 +70,7 @@ export const Footer: React.FC = () => {
             Khush Makwana
           </p>
           <p className="text-body text-[var(--dark-text-muted)] mt-[var(--space-md)] max-w-[320px]">
-            Specializing in AWS cloud infrastructure, automated CI/CD pipelines, and intuitive design systems. Open to engineering roles and ambitious collaborations.
+            Having a strong foundation in software engineering principles. Good knowledge in AWS cloud infrastructure, automated CI/CD pipelines, and intuitive design systems. Open to engineering roles and ambitious collaborations.
           </p>
           <div className="mt-4 pt-3 border-t border-white/5">
             <a
